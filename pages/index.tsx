@@ -1,3 +1,4 @@
+import React from 'react'
 import Head from 'next/head'
 
 export default function Home() {
@@ -8,7 +9,7 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1>HELLO WORLD</h1>
+        <h1>HELLO WORLD Bro</h1>
       </main>
     </div>
   )
