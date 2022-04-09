@@ -17,12 +17,12 @@ export default class MyDocument extends Document {
       const initialProps = await Document.getInitialProps(ctx)
       return {
         ...initialProps,
-        styles: (
-          <>
-            {initialProps.styles}
-            {sheet.getStyleElement()}
-          </>
-        ),
+        // styles: (
+        //   <>
+        //     {initialProps.styles}
+        //     {sheet.getStyleElement()}
+        //   </>
+        // ),
       }
     } finally {
       sheet.seal()
@@ -41,6 +41,9 @@ export default class MyDocument extends Document {
           />
 
           <link rel='icon' href='https://rocketseat.com.br/favicon.ico' />
+
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+
 
         </Head>
 

@@ -1,15 +1,16 @@
 import React from 'react'
 import Head from 'next/head'
+import SignInSide from '../components/sign-in-side'
 
 export default function Home() {
   return (
     <div>
       <Head>
-        <title>HOMEPAGE</title>
+        <title>Burnning Bush</title>
       </Head>
 
       <main>
-        <h1>HELLO WORLD Bro</h1>
+        <SignInSide />
       </main>
     </div>
   )
