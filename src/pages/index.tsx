@@ -1,6 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import SignInSide from '../components/sign-in-side'
+import ResponsiveAppBar from '../components/responsive-app-bar'
 
 export default function Home() {
   return (
@@ -10,7 +11,7 @@ export default function Home() {
       </Head>
 
       <main>
-        <SignInSide />
+        <ResponsiveAppBar />
       </main>
     </div>
   )
