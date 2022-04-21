@@ -1,6 +1,5 @@
 import React from 'react'
 import Head from 'next/head'
-import SignInSide from '../components/sign-in-side'
 import ResponsiveAppBar from '../components/responsive-app-bar'
 import Link from 'next/link'
 
