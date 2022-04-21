@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 import { useFetch } from '../../hooks/useFetch'
 
@@ -9,7 +10,7 @@ interface Complaint {
 
 export default function Index() {
 
-  const { data } = useFetch<Complaint[]>('http://localhost:3000/api/v1/mobile/complaints')
+  const { data } = useFetch<Complaint[]>('/api/v1/mobile/complaints')
 
   if (!data) {
     return <p>Loading...</p>
@@ -21,6 +22,9 @@ export default function Index() {
         {data.map(item => (
           <li key={item.id}>
             <a>{item.details}</a>
+            <Link href={`/complaints/${item.id}`}>
+              <a>SHOW</a>
+            </Link>
           </li>
         ))}
       </ul>
