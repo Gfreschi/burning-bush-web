@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import PrivateRoute from '../context/auth/private_route'
+import PrivateRoute from '../contexts/auth/private_route'
 import Link from 'next/link'
 
 export default function Home() {
@@ -11,21 +11,28 @@ export default function Home() {
       </Head>
 
       <main>
-        <Link href="/"> Home
+        <h1>Welcome to Burning Bush</h1>
+        <Link href="/">
+        Home
         </Link>
-
 
         <br></br>
 
-
         <Link href="/sessions/login">
-          <PrivateRoute />
+        Login
         </Link>
 
-        <Link href="/sessions/logout">
-          <PrivateRoute />
+        <br></br>
+
+        <Link href="/sessions/sign_up">
+        Sign_up
         </Link>
 
+        <br></br>
+
+        <Link href="/complaints">
+        Complaints
+        </Link>
       </main>
     </div>
   )

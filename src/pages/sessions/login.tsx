@@ -12,7 +12,8 @@ import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { Alert, Stack } from '@mui/material'
+import { AuthContext } from '../../contexts/AuthContext'
+
 
 function Copyright(props: any) {
   return (
@@ -30,7 +31,10 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const { signIn } = React.useContext(AuthContext)
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     if(data.get('email') === undefined
@@ -42,13 +46,10 @@ export default function SignInSide() {
         )
       }
       const payload = {
-        email: data.get('email'),
-        password: data.get('password')
+        email: data.get('email').toString(),
+        password: data.get('password').toString()
       }
-      // const response = await fetch('/api/v1/mobile/sessions', {
-      // }
-      console.log(payload.email, payload.password)
-      console.log("Opppsssssss")
+      try {signIn(payload)} catch(e) {console.log(e)}
   }
 
   return (
