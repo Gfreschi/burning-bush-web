@@ -16,7 +16,7 @@ export async function signInRequest(data: SignInRequestData) {
     }
   }
 }
-//recebe o token e retorna as infos do usuario
+//recebe o token e retorna as infos do usuario da api
 export async function recoverUserInfo() {
   return {
     user: {

@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
-import PrivateRoute from '../contexts/auth/private_route'
 import Link from 'next/link'
 
 export default function Home() {
+
+  // debug do contexto de autenticacao
+  // useEffect(() => {
+  //   api.get('/api/v1/users')
+  // }, [])
+
   return (
     <div>
       <Head>
