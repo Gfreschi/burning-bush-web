@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
-import ResponsiveAppBar from '../components/responsive-app-bar'
-import Link from 'next/link'
+import { Dashboard } from '@material-ui/icons'
+import PrivateRoute from '../context/auth/private_route'
 
 export default function Home() {
   return (
@@ -11,10 +11,9 @@ export default function Home() {
       </Head>
 
       <main>
-        <ResponsiveAppBar />
-        <Link href={`complaints/`}>
-          <a>Complaints</a>
-        </Link>
+        <PrivateRoute>
+          <Dashboard />
+        </PrivateRoute>
       </main>
     </div>
   )
