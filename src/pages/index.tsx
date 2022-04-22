@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
-import { Dashboard } from '@material-ui/icons'
 import PrivateRoute from '../context/auth/private_route'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -11,9 +11,21 @@ export default function Home() {
       </Head>
 
       <main>
-        <PrivateRoute>
-          <Dashboard />
-        </PrivateRoute>
+        <Link href="/"> Home
+        </Link>
+
+
+        <br></br>
+
+
+        <Link href="/sessions/login">
+          <PrivateRoute />
+        </Link>
+
+        <Link href="/sessions/logout">
+          <PrivateRoute />
+        </Link>
+
       </main>
     </div>
   )

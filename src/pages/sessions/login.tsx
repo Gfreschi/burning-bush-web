@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { Alert, Stack } from '@mui/material'
 
 function Copyright(props: any) {
   return (
@@ -32,11 +33,23 @@ export default function SignInSide() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+    if(data.get('email') === undefined
+      || data.get('password') === undefined
+      || data.get('email') === ''
+      || data.get('password') === '') {
+        return (
+          console.log('error')
+        )
+      }
+      const payload = {
+        email: data.get('email'),
+        password: data.get('password')
+      }
+      // const response = await fetch('/api/v1/mobile/sessions', {
+      // }
+      console.log(payload.email, payload.password)
+      console.log("Opppsssssss")
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -70,7 +83,7 @@ export default function SignInSide() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Entre
+              Login
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
@@ -95,7 +108,7 @@ export default function SignInSide() {
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                label="Lembre-se de mim"
               />
               <Button
                 type="submit"
@@ -112,7 +125,7 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="/sessions/sign_up" variant="body2">
                     {"Não tem uma conta? Cadastre-se agora!"}
                   </Link>
                 </Grid>
@@ -123,5 +136,5 @@ export default function SignInSide() {
         </Grid>
       </Grid>
     </ThemeProvider>
-  );
+  )
 }
