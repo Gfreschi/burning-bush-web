@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import Layout from '../components/Layout'
 
 export default function Home() {
   // debug do contexto de autenticacao
@@ -15,20 +16,22 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1>Welcome to Burning Bush</h1>
-        <Link href="/">Home</Link>
+        <Layout title="Burning Bush">
+          <h1>Welcome to Burning Bush</h1>
+          <Link href="/">Home</Link>
 
-        <br></br>
+          <br></br>
 
-        <Link href="/sessions/login">Login</Link>
+          <Link href="/sessions/login">Login</Link>
 
-        <br></br>
+          <br></br>
 
-        <Link href="/sessions/sign_up">Sign_up</Link>
+          <Link href="/sessions/sign_up">Sign_up</Link>
 
-        <br></br>
+          <br></br>
 
-        <Link href="/complaints">Complaints</Link>
+          <Link href="/complaints">Complaints</Link>
+        </Layout>
       </main>
     </div>
   )

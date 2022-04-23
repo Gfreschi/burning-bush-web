@@ -12,8 +12,8 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 
-const pages = ['Products', 'Pricing', 'Blog']
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+const pages = ['Home', 'Map', 'About', 'Contact']
+const settings = ['Profile', 'Complaints', 'Logout']
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
@@ -46,7 +46,7 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            LOGO
+            Burning Bush
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
