@@ -51,19 +51,19 @@ const primaryMenu = [
   {
     id: 1,
     label: 'Visita ao mapa local',
-    path: '/maps/sdsdsdsd',
+    path: '#',
     icon: MapIcon,
   },
   {
     id: 2,
     label: 'Queixa',
-    path: '/complaints/create',
+    path: 'complaints',
     icon: AddLocationAltIcon,
   },
   {
     id: 3,
     label: 'Listar Incidentes',
-    path: '/incidents',
+    path: 'incidents',
     icon: ListAltIcon,
   },
 ]
@@ -97,6 +97,7 @@ function NavBar() {
               button
               classes={{ root: classes.listItem }}
               selected={isSelected(item)}
+              onClick={() => router.push(item.path)}
             >
               <ListItemIcon>
                 <Icon style={{ color: isSelected(item) && '#f44336' }} />
@@ -123,6 +124,7 @@ function NavBar() {
               button
               classes={{ root: classes.listItem }}
               selected={isSelected(item)}
+              onClick={() => router.push(item.path)}
             >
               <ListItemIcon>
                 <Icon style={{ color: isSelected(item) && '#f44336' }} />
@@ -149,6 +151,7 @@ function NavBar() {
             variant="outlined"
             color="secondary"
             startIcon={<AccountCircle />}
+            onClick={() => router.push('sessions/login')}
           >
             Fazer login
           </Button>
@@ -158,16 +161,18 @@ function NavBar() {
   )
 
   return (
-    <Hidden mdDown>
-      <Drawer
-        anchor="left"
-        classes={{ paper: classes.desktopDrawer }}
-        open
-        variant="persistent"
-      >
-        {content}
-      </Drawer>
-    </Hidden>
+    <div>
+      <Hidden mdDown>
+        <Drawer
+          anchor="left"
+          classes={{ paper: classes.desktopDrawer }}
+          open
+          variant="persistent"
+        >
+          {content}
+        </Drawer>
+      </Hidden>
+    </div>
   )
 }
 

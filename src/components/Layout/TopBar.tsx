@@ -14,6 +14,7 @@ import Button from '@mui/material/Button'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import { Hidden } from '@mui/material'
 import Badge from '@material-ui/core/Badge'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,12 +51,15 @@ const useStyles = makeStyles(theme => ({
 
 function TopBar() {
   const classes = useStyles()
+
+  const router = useRouter()
+
   return (
     <AppBar className={classes.root} color="default">
       <Toolbar className={classes.toolbar}>
         <Box display="flex" alignItems="center">
           <MenuIcon />
-          <img src="/fav-icon-bush.png" alt="logo" className={classes.logo} />
+          <img src="#" alt="logo" className={classes.logo} />
         </Box>
 
         <Hidden mdDown>
@@ -93,6 +97,7 @@ function TopBar() {
             component="a"
             variant="outlined"
             startIcon={<AccountCircle />}
+            onClick={() => router.push('sessions/login')}
           >
             Fazer Login
           </Button>
