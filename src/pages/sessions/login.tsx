@@ -14,10 +14,14 @@ import Typography from '@mui/material/Typography'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { AuthContext } from '../../contexts/AuthContext'
 
-
 function Copyright(props: any) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
       {'Copyright © '}
       <Link color="inherit" href="#">
         Burning Bush
@@ -25,31 +29,34 @@ function Copyright(props: any) {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-  );
+  )
 }
 
-const theme = createTheme();
+const theme = createTheme()
 
 export default function SignInSide() {
-
   const { signIn } = React.useContext(AuthContext)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    if(data.get('email') === undefined
-      || data.get('password') === undefined
-      || data.get('email') === ''
-      || data.get('password') === '') {
-        return (
-          console.log('error')
-        )
-      }
-      const payload = {
-        email: data.get('email').toString(),
-        password: data.get('password').toString()
-      }
-      try {signIn(payload)} catch(e) {console.log(e)}
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    if (
+      data.get('email') === undefined ||
+      data.get('password') === undefined ||
+      data.get('email') === '' ||
+      data.get('password') === ''
+    ) {
+      return console.log('error')
+    }
+    const payload = {
+      email: data.get('email').toString(),
+      password: data.get('password').toString(),
+    }
+    try {
+      signIn(payload)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
@@ -64,8 +71,10 @@ export default function SignInSide() {
           sx={{
             backgroundImage: 'url(https://source.unsplash.com/random)',
             backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundColor: t =>
+              t.palette.mode === 'light'
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -86,7 +95,12 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Login
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1 }}
+            >
               <TextField
                 margin="normal"
                 required
@@ -127,7 +141,7 @@ export default function SignInSide() {
                 </Grid>
                 <Grid item>
                   <Link href="/sessions/sign_up" variant="body2">
-                    {"Não tem uma conta? Cadastre-se agora!"}
+                    {'Não tem uma conta? Cadastre-se agora!'}
                   </Link>
                 </Grid>
               </Grid>

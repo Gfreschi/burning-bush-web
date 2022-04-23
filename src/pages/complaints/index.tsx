@@ -14,8 +14,7 @@ interface Complaint {
 }
 
 export default function Index() {
-
-  //persistindo dado do usuario apos a autenticacao
+  // persistindo dado do usuario apos a autenticacao
   const { user } = useContext(AuthContext)
   const { data } = useFetch<Complaint[]>('/api/v1/mobile/complaints')
 
@@ -43,24 +42,24 @@ export default function Index() {
   )
 }
 
-//validando a autenticacao do usuario nesta pagina
-export const getServerSideProps = async (ctx) => {
+// validando a autenticacao do usuario nesta pagina
+export const getServerSideProps = async ctx => {
   const apiClient = getApiClient(ctx)
-  const { ['bnb.token']: token } = parseCookies(ctx)
+  const { 'bnb.token': token } = parseCookies(ctx)
 
   if (!token) {
     return {
       redirect: {
         destination: '/',
         permanent: false,
-      }
+      },
     }
   }
 
-  apiClient.defaults.headers['Authorization'] = `Bearer ${token}`
-  //const { data } = await api.get('/api/v1/mobile/complaints')
+  apiClient.defaults.headers.Authorization = `Bearer ${token}`
+  // const { data } = await api.get('/api/v1/mobile/complaints')
 
   return {
-    props: {}
+    props: {},
   }
 }

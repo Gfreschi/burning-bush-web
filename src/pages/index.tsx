@@ -3,7 +3,6 @@ import Head from 'next/head'
 import Link from 'next/link'
 
 export default function Home() {
-
   // debug do contexto de autenticacao
   // useEffect(() => {
   //   api.get('/api/v1/users')
@@ -17,27 +16,19 @@ export default function Home() {
 
       <main>
         <h1>Welcome to Burning Bush</h1>
-        <Link href="/">
-        Home
-        </Link>
+        <Link href="/">Home</Link>
 
         <br></br>
 
-        <Link href="/sessions/login">
-        Login
-        </Link>
+        <Link href="/sessions/login">Login</Link>
 
         <br></br>
 
-        <Link href="/sessions/sign_up">
-        Sign_up
-        </Link>
+        <Link href="/sessions/sign_up">Sign_up</Link>
 
         <br></br>
 
-        <Link href="/complaints">
-        Complaints
-        </Link>
+        <Link href="/complaints">Complaints</Link>
       </main>
     </div>
   )

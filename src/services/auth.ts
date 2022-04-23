@@ -1,4 +1,4 @@
-//responsavel por chamar o serviço de autenticação de api
+// responsavel por chamar o serviço de autenticação de api
 
 type SignInRequestData = {
   email: string
@@ -6,23 +6,23 @@ type SignInRequestData = {
 }
 
 export async function signInRequest(data: SignInRequestData) {
-  //pesquisar payload
+  // pesquisar payload
   return {
     token: 'abc123abc',
     user: {
       name: 'Gabriel Freschi - ADMIN',
       email: 'admin@admin.com',
       avatar_url: 'https://github.com/Gfreschi.png',
-    }
+    },
   }
 }
-//recebe o token e retorna as infos do usuario da api
+// recebe o token e retorna as infos do usuario da api
 export async function recoverUserInfo() {
   return {
     user: {
       name: 'Gabriel Freschi - ADMIN',
       email: 'admin@admin.com',
       avatar_url: 'https://github.com/Gfreschi.png',
-    }
+    },
   }
 }

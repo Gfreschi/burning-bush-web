@@ -9,9 +9,12 @@ interface Complaint {
 }
 
 export default function ShowComplaint() {
-
-  const { query: { id } } = useRouter()
-  const { data } = useFetch<Complaint>(`http://localhost:3000/api/v1/mobile/complaints/${id}`)
+  const {
+    query: { id },
+  } = useRouter()
+  const { data } = useFetch<Complaint>(
+    `http://localhost:3000/api/v1/mobile/complaints/${id}`
+  )
 
   if (!data) {
     return <p>Loading...</p>
