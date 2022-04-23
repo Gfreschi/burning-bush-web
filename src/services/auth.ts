@@ -12,7 +12,7 @@ export async function signInRequest(data: SignInRequestData) {
     user: {
       name: 'Gabriel Freschi - ADMIN',
       email: 'admin@admin.com',
-      avatar_url: 'https://github.com/Gfreschi.png',
+      avatarUrl: 'https://github.com/Gfreschi.png',
     },
   }
 }
@@ -22,7 +22,7 @@ export async function recoverUserInfo() {
     user: {
       name: 'Gabriel Freschi - ADMIN',
       email: 'admin@admin.com',
-      avatar_url: 'https://github.com/Gfreschi.png',
+      avatarUrl: 'https://github.com/Gfreschi.png',
     },
   }
 }

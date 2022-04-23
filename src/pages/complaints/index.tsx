@@ -27,7 +27,7 @@ export default function Index() {
       <h1>Complaints</h1>
       <p>{user?.name}</p>
       <p>{user?.email}</p>
-      <img src={user?.avatar_url} alt="logo" />
+      <img src={user?.avatarUrl} alt="logo" />
       <ul>
         {data.map(item => (
           <li key={item.id}>

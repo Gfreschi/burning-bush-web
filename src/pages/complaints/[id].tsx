@@ -1,4 +1,4 @@
-import react from 'react'
+import React from 'react'
 import { useFetch } from '../../hooks/useFetch'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
