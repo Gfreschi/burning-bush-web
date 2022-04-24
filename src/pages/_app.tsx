@@ -20,6 +20,7 @@ export default function MyApp(props: MyAppProps) {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
+        <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
 
@@ -33,16 +34,3 @@ export default function MyApp(props: MyAppProps) {
     </CacheProvider>
   )
 }
-
-// function MyApp({ Component, pageProps }) {
-//   return (
-//     <AuthProvider>
-//       <ThemeProvider theme={theme}>
-//         <Component {...pageProps} />
-//         <GlobalStyle />
-//       </ ThemeProvider>
-//     </AuthProvider>
-//   )
-// }
-
-// export default MyApp
