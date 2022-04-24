@@ -2,6 +2,7 @@ import { redirect } from 'next/dist/server/api-utils'
 import Link from 'next/link'
 import { parseCookies } from 'nookies'
 import React, { useContext } from 'react'
+import Layout from '../../components/Layout'
 
 import { AuthContext } from '../../contexts/AuthContext'
 import { useFetch } from '../../hooks/useFetch'
@@ -23,7 +24,7 @@ export default function Index() {
   }
 
   return (
-    <div>
+    <Layout title="Complaints">
       <h1>Complaints</h1>
       <p>{user?.name}</p>
       <p>{user?.email}</p>
@@ -38,7 +39,7 @@ export default function Index() {
           </li>
         ))}
       </ul>
-    </div>
+    </Layout>
   )
 }
 

@@ -51,7 +51,7 @@ const primaryMenu = [
   {
     id: 1,
     label: 'Visita ao mapa local',
-    path: '#',
+    path: '/',
     icon: MapIcon,
   },
   {
