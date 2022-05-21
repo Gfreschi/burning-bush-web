@@ -39,11 +39,6 @@ export async function signUpRequest(data: SignUpRequestData) {
       token_type: response.data.token_type,
       created_at: response.data.created_at,
     },
-    user: {
-      name: 'Gabriel Freschi - ADMIN',
-      email: 'admin@admin.com',
-      avatarUrl: 'https://github.com/Gfreschi.png',
-    },
     error: {
       status: response.data.status,
       message: response.data.statusText,
@@ -69,11 +64,6 @@ export async function signInRequest(data: SignInRequestData) {
       token_type: response.data.token_type,
       created_at: response.data.created_at,
     },
-    user: {
-      name: 'Gabriel Freschi - ADMIN',
-      email: 'admin@admin.com',
-      avatarUrl: 'https://github.com/Gfreschi.png',
-    },
     error: {
       status: response.data.status,
       message: response.data.statusText,
@@ -81,7 +71,7 @@ export async function signInRequest(data: SignInRequestData) {
   }
 }
 
-export async function signOutRequest(data: SignOutRequestData ) {
+export async function signOutRequest(data: SignOutRequestData) {
   const response = await api.post('/api/v1/oauth/revoke', {
     token: data.value,
     client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
@@ -91,12 +81,22 @@ export async function signOutRequest(data: SignOutRequestData ) {
   return { response }
 }
 // recebe o token e retorna as infos do usuario da api
-export async function recoverUserInfo() {
-  return {
-    user: {
-      name: 'Gabriel Freschi - ADMIN',
-      email: 'admin@admin.com',
-      avatarUrl: 'https://github.com/Gfreschi.png',
+export async function getCurrentUser(accessToken: string) {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
   }
+
+  const response = await api.get('/api/v1/users/me', config)
+
+  return { response }
+  // return api
+  //   .get('/v1/users/me', config)
+  //   .then((response: any) => {
+  //     return response.data
+  //   })
+  //   .catch((error: any) => {
+  //     return error.response.data
+  //   })
 }

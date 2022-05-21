@@ -3,10 +3,10 @@ import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import Router from 'next/router'
 
 import {
-  recoverUserInfo,
   signInRequest,
   signUpRequest,
   signOutRequest,
+  getCurrentUser,
 } from '../services/auth'
 import { api } from '../services/api'
 
@@ -54,10 +54,10 @@ export function AuthProvider({ children }) {
   const isAuthenticated = !!user
 
   useEffect(() => {
-    const { 'bnb.token': token } = parseCookies()
+    const { 'bnb_access_token': token } = parseCookies()
 
     if (token) {
-      recoverUserInfo().then(response => {
+      getCurrentUser(token).then(response => {
         setUser(response.user)
       })
     }
@@ -65,12 +65,12 @@ export function AuthProvider({ children }) {
 
   // chamada ao backend onde faz a authenticacao de um novo usuario e retorna suas credencias
   async function signUp({ email, password }: SignUpData) {
-    const { token, user } = await signUpRequest({
+    const { token } = await signUpRequest({
       email,
       password,
     })
 
-    setCookie(undefined, 'bnb.token', token.access_token, {
+    setCookie(undefined, 'bnb_access_token', token.access_token, {
       maxAge: token.expires_in, // 2 hours
     })
 
@@ -84,7 +84,7 @@ export function AuthProvider({ children }) {
 
   // chamada ao backend onde faz a authenticacao e retorna um usuario
   async function signIn({ email, password }: SignInData) {
-    const { token, user, error } = await signInRequest({
+    const { token, error } = await signInRequest({
       email,
       password,
     })
@@ -94,7 +94,7 @@ export function AuthProvider({ children }) {
       return alert(error.message)
     }
 
-    setCookie(undefined, 'bnb.token', token.access_token, {
+    setCookie(undefined, 'bnb_access_token', token.access_token, {
       maxAge: token.expires_in, // 2 hours
     })
 
@@ -109,7 +109,7 @@ export function AuthProvider({ children }) {
   async function signOut({ accessToken }: SignOutData) {
     const { response } = await signOutRequest({ accessToken })
 
-    destroyCookie(undefined, 'bnb.token')
+    destroyCookie(undefined, 'bnb_access_token')
 
     setUser(null)
 

@@ -33,6 +33,7 @@ export default function Index() {
         {data.map(item => (
           <li key={item.id}>
             <a>{item.details}</a>
+            <a> - {item.id}: </a>
             <Link href={`/complaints/${item.id}`}>
               <a>SHOW</a>
             </Link>
@@ -46,7 +47,7 @@ export default function Index() {
 // validando a autenticacao do usuario nesta pagina
 export const getServerSideProps = async ctx => {
   const apiClient = getApiClient(ctx)
-  const { 'bnb.token': token } = parseCookies(ctx)
+  const { 'bnb_access_token': token } = parseCookies(ctx)
 
   if (!token) {
     return {
