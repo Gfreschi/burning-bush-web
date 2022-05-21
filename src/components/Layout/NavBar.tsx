@@ -151,7 +151,7 @@ function NavBar() {
             variant="outlined"
             color="secondary"
             startIcon={<AccountCircle />}
-            onClick={() => router.push('sessions/login')}
+            onClick={() => router.push('sessions/sign_in')}
           >
             Fazer login
           </Button>

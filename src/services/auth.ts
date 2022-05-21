@@ -12,6 +12,10 @@ type SignUpRequestData = {
   password: string
 }
 
+type SignOutRequestData = {
+  accessToken: string
+}
+
 type Token = {
   accessToken: string
   refreshToken: string
@@ -75,6 +79,16 @@ export async function signInRequest(data: SignInRequestData) {
       message: response.data.statusText,
     },
   }
+}
+
+export async function signOutRequest(data: SignOutRequestData ) {
+  const response = await api.post('/api/v1/oauth/revoke', {
+    token: data.value,
+    client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
+    client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
+  })
+
+  return { response }
 }
 // recebe o token e retorna as infos do usuario da api
 export async function recoverUserInfo() {

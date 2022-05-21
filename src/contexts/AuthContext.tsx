@@ -1,8 +1,13 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { setCookie, parseCookies } from 'nookies'
+import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import Router from 'next/router'
 
-import { recoverUserInfo, signInRequest, signUpRequest } from '../services/auth'
+import {
+  recoverUserInfo,
+  signInRequest,
+  signUpRequest,
+  signOutRequest,
+} from '../services/auth'
 import { api } from '../services/api'
 
 type User = {
@@ -21,11 +26,16 @@ type SignUpData = {
   password: string
 }
 
+type SignOutData = {
+  accessToken: string
+}
+
 type AuthContextType = {
   isAuthenticated: boolean
   user: User
   signIn: (data: SignInData) => Promise<void>
   signUp: (data: SignUpData) => Promise<void>
+  signOut: (data: SignOutData) => Promise<void>
 }
 
 type Token = {
@@ -96,8 +106,22 @@ export function AuthProvider({ children }) {
     console.log(user)
   }
 
+  async function signOut({ accessToken }: SignOutData) {
+    const { response } = await signOutRequest({ accessToken })
+
+    destroyCookie(undefined, 'bnb.token')
+
+    setUser(null)
+
+    Router.push('/')
+
+    console.log('logout')
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, signIn, signUp, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   )

@@ -16,9 +16,11 @@ export default function Home() {
     // </Layout>
     <main>
       <Layout title="Home">
-        <Link href="/sessions/login">Login</Link>
+        <Link href="/sessions/sign_in">Sign In</Link>
         <br></br>
-        <Link href="/sessions/sign_up">Sign_up</Link>
+        <Link href="/sessions/sign_up">Sign Up</Link>
+        <br></br>
+        <Link href="/sessions/sign_out">Sign Out</Link>
         <br></br>
         <Link href="/complaints">Complaints</Link>
       </Layout>

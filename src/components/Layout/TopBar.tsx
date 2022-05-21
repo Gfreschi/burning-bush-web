@@ -86,7 +86,7 @@ function TopBar() {
             component="a"
             variant="outlined"
             startIcon={<AccountCircle />}
-            onClick={() => router.push('sessions/login')}
+            onClick={() => router.push('sessions/sign_in')}
           >
             Fazer Login
           </Button>
