@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from 'react'
 import { setCookie, parseCookies } from 'nookies'
 import Router from 'next/router'
 
-import { recoverUserInfo, signInRequest } from '../services/auth'
+import { recoverUserInfo, signInRequest, signUpRequest } from '../services/auth'
 import { api } from '../services/api'
 
 type User = {
@@ -16,10 +16,16 @@ type SignInData = {
   password: string
 }
 
+type SignUpData = {
+  email: string
+  password: string
+}
+
 type AuthContextType = {
   isAuthenticated: boolean
   user: User
   signIn: (data: SignInData) => Promise<void>
+  signUp: (data: SignUpData) => Promise<void>
 }
 
 type Token = {
@@ -47,6 +53,25 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  // chamada ao backend onde faz a authenticacao de um novo usuario e retorna suas credencias
+  async function signUp({ email, password }: SignUpData) {
+    const { token, user } = await signUpRequest({
+      email,
+      password,
+    })
+
+    setCookie(undefined, 'bnb.token', token.access_token, {
+      maxAge: token.expires_in, // 2 hours
+    })
+
+    api.defaults.headers.Authorization = `Bearer ${token.access_token}`
+
+    setUser(user)
+
+    Router.push('/')
+    console.log(user)
+  }
+
   // chamada ao backend onde faz a authenticacao e retorna um usuario
   async function signIn({ email, password }: SignInData) {
     const { token, user, error } = await signInRequest({
@@ -72,7 +97,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp }}>
       {children}
     </AuthContext.Provider>
   )

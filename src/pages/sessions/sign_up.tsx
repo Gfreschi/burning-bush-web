@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { AuthContext } from '../../contexts/AuthContext'
 
 function Copyright(props: any) {
   return (
@@ -34,14 +35,33 @@ function Copyright(props: any) {
 const theme = createTheme()
 
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const { signUp } = React.useContext(AuthContext)
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    console.log({
-      name: data.get('firstName') + ' ' + data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+    // TODO: validate data in a better format
+    if (
+      data.get('email') === undefined ||
+      data.get('password') === undefined ||
+      data.get('email') === '' ||
+      data.get('password') === '' ||
+      data.get('password-confirmation') === undefined ||
+      data.get('password-confirmation') === '' ||
+      data.get('password-confirmation') !== data.get('password')
+    ) {
+      return console.log('error')
+    }
+    const payload = {
+      email: data.get('email').toString(),
+      password: data.get('password').toString(),
+    }
+    try {
+      console.log(payload)
+      signUp(payload)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
@@ -122,12 +142,6 @@ export default function SignUp() {
                   autoComplete="password-confirmation"
                 />
               </Grid>
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
             </Grid>
             <Button
               type="submit"
