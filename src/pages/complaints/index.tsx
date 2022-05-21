@@ -17,7 +17,7 @@ interface Complaint {
 export default function Index() {
   // persistindo dado do usuario apos a autenticacao
   const { user } = useContext(AuthContext)
-  const { data } = useFetch<Complaint[]>('/api/v1/mobile/complaints')
+  const { data } = useFetch<Complaint[]>('/api/v1/web/complaints')
 
   if (!data) {
     return <p>Loading...</p>

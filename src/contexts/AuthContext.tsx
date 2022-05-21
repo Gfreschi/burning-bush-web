@@ -22,6 +22,14 @@ type AuthContextType = {
   signIn: (data: SignInData) => Promise<void>
 }
 
+type Token = {
+  accessToken: string
+  refreshToken: string
+  tokenType: string
+  expiresIn: number
+  createdAt: number
+}
+
 export const AuthContext = createContext({} as AuthContextType)
 
 export function AuthProvider({ children }) {
@@ -39,17 +47,23 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  // chamada ao backend onde faz a authenticacao e retorna um usuario
   async function signIn({ email, password }: SignInData) {
-    const { token, user } = await signInRequest({
+    const { token, user, error } = await signInRequest({
       email,
       password,
     })
 
-    setCookie(undefined, 'bnb.token', token, {
-      maxAge: 60 * 60 * 1, // 1 hour
+    // TODO: tratar erros
+    if (!error) {
+      return alert(error.message)
+    }
+
+    setCookie(undefined, 'bnb.token', token.access_token, {
+      maxAge: token.expires_in, // 2 hours
     })
 
-    api.defaults.headers.Authorization = `Bearer ${token}`
+    api.defaults.headers.Authorization = `Bearer ${token.access_token}`
 
     setUser(user)
 
