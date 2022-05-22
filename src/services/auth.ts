@@ -88,9 +88,11 @@ export async function getCurrentUser(accessToken: string) {
     },
   }
 
-  const response = await api.get('/api/v1/users/me', config)
+  const user = await api.get('/api/v1/users/me', config)
 
-  return { response }
+  return { user }
+
+  // best way to get user info
   // return api
   //   .get('/v1/users/me', config)
   //   .then((response: any) => {

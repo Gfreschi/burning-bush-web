@@ -54,11 +54,11 @@ export function AuthProvider({ children }) {
   const isAuthenticated = !!user
 
   useEffect(() => {
-    const { 'bnb_access_token': token } = parseCookies()
+    const { 'bnb_access_token': accessToken } = parseCookies()
 
-    if (token) {
-      getCurrentUser(token).then(response => {
-        setUser(response.user)
+    if (accessToken) {
+      getCurrentUser(accessToken).then(response => {
+        setUser(response.user.data)
       })
     }
   }, [])
