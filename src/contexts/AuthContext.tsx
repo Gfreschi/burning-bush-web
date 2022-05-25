@@ -64,6 +64,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   // chamada ao backend onde faz a authenticacao de um novo usuario e retorna suas credencias
+  // hook para fazer o registro de um novo usuario
   async function signUp({ email, password }: SignUpData) {
     const { token } = await signUpRequest({
       email,
@@ -84,10 +85,12 @@ export function AuthProvider({ children }) {
 
   // chamada ao backend onde faz a authenticacao e retorna um usuario
   async function signIn({ email, password }: SignInData) {
-    const { token, error } = await signInRequest({
+    const response = await signInRequest({
       email,
       password,
     })
+
+    return response
 
     // TODO: tratar erros
     if (!error) {
@@ -115,7 +118,7 @@ export function AuthProvider({ children }) {
 
     Router.push('/')
 
-    console.log('logout')
+    console.log(response)
   }
 
   return (

@@ -7,10 +7,10 @@ export default function SignOut() {
   const { signOut } = React.useContext(AuthContext)
 
   // TODO: refactor this
-  const payload = parseCookies()
+  const { 'bnb_accces_token': accessToken } = parseCookies()
   try {
-    console.log(payload)
-    signOut(payload)
+    console.log(accessToken)
+    signOut(accessToken)
   } catch (e) {
     console.log(e)
   }
