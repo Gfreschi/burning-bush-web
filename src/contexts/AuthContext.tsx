@@ -85,28 +85,38 @@ export function AuthProvider({ children }) {
 
   // chamada ao backend onde faz a authenticacao e retorna um usuario
   async function signIn({ email, password }: SignInData) {
-    const response = await signInRequest({
-      email,
-      password,
-    })
+    try {
+      const { data, status } = await signInRequest({
+        email,
+        password,
+      })
+      console.log(data)
+      // console.log(status)
+      if (status !== 200) {
+        console.log(data.error_description)
+        return {
+          response: {
+            error: data.error,
+            error_description: data.error_description,
+            status: status,
+          },
+        }
+      }
 
-    return response
+      if (data?.access_token) {
+        setCookie(undefined, 'bnb_access_token', data.access_token, {
+          maxAge: data.expires_in, // 2 hours
+        })
 
-    // TODO: tratar erros
-    if (!error) {
-      return alert(error.message)
+        api.defaults.headers.Authorization = `Bearer ${data.access_token}`
+
+        console.log(accessToken)
+        setUser(data)
+        Router.push('/')
+      }
+    } catch (error) {
+      console.error(error)
     }
-
-    setCookie(undefined, 'bnb_access_token', token.access_token, {
-      maxAge: token.expires_in, // 2 hours
-    })
-
-    api.defaults.headers.Authorization = `Bearer ${token.access_token}`
-
-    setUser(user)
-
-    Router.push('/')
-    console.log(user)
   }
 
   async function signOut({ accessToken }: SignOutData) {

@@ -48,17 +48,27 @@ export async function signUpRequest(data: SignUpRequestData) {
 
 export async function signInRequest(data: SignInRequestData) {
   // pesquisar payload
-  const response = await api.post('/api/v1/oauth/token', {
-    email: data.email,
-    password: data.password,
-    grant_type: 'password',
-    client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
-    client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
-  })
-
-  console.log(response)
-  return {
-    response,
+  try {
+    const response = await api.post(
+      '/api/v1/oauth/token',
+      JSON.stringify({
+        email: data.email,
+        password: data.password,
+        grant_type: 'password',
+        client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
+        client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    // console.log(response)
+    return response
+  } catch (error) {
+    // console.log(error.response) // response error data
+    return error.response
   }
 }
 

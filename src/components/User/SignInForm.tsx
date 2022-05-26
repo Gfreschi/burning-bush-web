@@ -14,7 +14,6 @@ import Typography from '@mui/material/Typography'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../../styles/theme'
 import { AuthContext } from '../../contexts/AuthContext'
-import { Router } from 'next/router'
 import ListErrors from '../common/ListErrors'
 
 function Copyright(props: any) {
@@ -61,15 +60,12 @@ export default function SignInForm() {
     }
 
     try {
-      signIn(payload)
-      // const { data } = await signIn(payload)
-      // if (data.errors.status !== 200) {
-      //   setErrors(data.errors.message)
-      // }
-
-      // if (data?.user) {
-      //   alert('Successfully signed in!')
-      // }
+      const response = await signIn(payload)
+      if (response?.status !== 200) {
+        console.log(response)
+      } else {
+        alert('Login realizado com sucesso!')
+      }
     } catch (error) {
       console.log(error)
     } finally {
