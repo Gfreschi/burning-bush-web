@@ -39,16 +39,6 @@ export default function SignInForm() {
 
   const [isLoading, setIsLoading] = React.useState(false)
   const [errors, setErrors] = React.useState([])
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
-
-  const handleEmailChange = React.useCallback(e => {
-    setEmail(e.target.value)
-  }, [])
-
-  const handlePasswordChange = React.useCallback(e => {
-    setPassword(e.target.value)
-  }, [])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -62,9 +52,7 @@ export default function SignInForm() {
     try {
       const response = await signIn(payload)
       if (response?.status !== 200) {
-        console.log(response)
-      } else {
-        alert('Login realizado com sucesso!')
+        alert(response.data.error)
       }
     } catch (error) {
       console.log(error)
@@ -75,7 +63,7 @@ export default function SignInForm() {
 
   return (
     <>
-      <ListErrors errors={errors} />
+      {/* <ListErrors errors={errors} /> */}
 
       <ThemeProvider theme={theme}>
         <Grid container component="main" sx={{ height: '100vh' }}>
@@ -133,7 +121,6 @@ export default function SignInForm() {
                   name="email"
                   autoComplete="email"
                   autoFocus
-                  onChange={handleEmailChange}
                 />
                 <TextField
                   margin="normal"
@@ -144,7 +131,6 @@ export default function SignInForm() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                  onChange={handlePasswordChange}
                 />
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}

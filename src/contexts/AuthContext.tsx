@@ -2,12 +2,7 @@ import React, { createContext, useEffect, useState } from 'react'
 import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import Router from 'next/router'
 
-import {
-  signInRequest,
-  signUpRequest,
-  signOutRequest,
-  getCurrentUser,
-} from '../services/auth'
+import { signUpRequest, signOutRequest } from '../services/auth'
 import { api } from '../services/api'
 
 type User = {
@@ -53,13 +48,26 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = !!user
 
+  // toda vez que este componente for renderizado, vai executar
   useEffect(() => {
-    const { 'bnb_access_token': accessToken } = parseCookies()
+    // verifica se existe um token no cookie e o renomeia para accessToken
+    const { bnb_access_token: accessToken } = parseCookies()
 
     if (accessToken) {
-      getCurrentUser(accessToken).then(response => {
-        setUser(response.user.data)
-      })
+      try {
+        api
+          .get('/api/v1/users/me', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+          .then(response => {
+            // console.log('autehnticated')
+            setUser(response.data.user)
+          })
+      } catch (error) {
+        return error.response
+      }
     }
   }, [])
 
@@ -86,39 +94,43 @@ export function AuthProvider({ children }) {
   // chamada ao backend onde faz a authenticacao e retorna um usuario
   async function signIn({ email, password }: SignInData) {
     try {
-      const { data, status } = await signInRequest({
-        email,
-        password,
-      })
-      console.log(data)
-      // console.log(status)
-      if (status !== 200) {
-        console.log(data.error_description)
-        return {
-          response: {
-            error: data.error,
-            error_description: data.error_description,
-            status: status,
+      const response = await api.post(
+        '/api/v1/oauth/token',
+        JSON.stringify({
+          email: email,
+          password: password,
+          grant_type: 'password',
+          client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
+          client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
           },
         }
-      }
+      )
 
-      if (data?.access_token) {
-        setCookie(undefined, 'bnb_access_token', data.access_token, {
-          maxAge: data.expires_in, // 2 hours
+      if (response?.data.access_token) {
+        setCookie(undefined, 'bnb_access_token', response.data.access_token, {
+          maxAge: response.data.expires_in, // 2 hours
         })
 
-        api.defaults.headers.Authorization = `Bearer ${data.access_token}`
+        api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`
 
-        console.log(accessToken)
-        setUser(data)
+        setUser(response.data.access_token)
+
         Router.push('/')
+
+        console.log(response)
       }
+      return response
     } catch (error) {
-      console.error(error)
+      console.log(error.response) // response error data
+      return error.response
     }
   }
 
+  // chamada ao backend para fazer o logout
   async function signOut({ accessToken }: SignOutData) {
     const { response } = await signOutRequest({ accessToken })
 
