@@ -1,23 +1,35 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactMapboxGl, { Marker, Popup } from 'react-mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Box } from '@material-ui/core'
 import WorldMapBox from '../components/WorldMapBox'
+import { useFetch } from '../hooks/useFetch'
 
+type Complaint = {
+  id: number
+  latitude: number
+  longitude: number
+}
 const Map = ReactMapboxGl({
   accessToken:
     'pk.eyJ1IjoiZ2ZyZXNjaGlpIiwiYSI6ImNsMmRoNm52ZTAwZ2MzaXJ3MGJqd3I2NjQifQ.Gn1njvZQCcHTUt4MxbaVyA',
 })
 
-// const [complaints, setComplaints] = React.useState([
-//   {
-//     id: 1,
-//     latitude: -22.407,
-//     longitude: -47.562,
-//   },
-// ])
+export default function MapboxMap() {
+  const [complaints, setComplaints] = useState<Complaint[] | null>([])
 
-export default function MapboxMap({ complaints }) {
+  const fetchedComplaint = [
+    { id: 0, latitude: -22.407, longitude: -47.562 },
+    { id: 1, latitude: -22.107, longitude: -47.562 },
+    { id: 2, latitude: -22.207, longitude: -47.562 },
+    { id: 3, latitude: -22.307, longitude: -47.562 },
+    { id: 4, latitude: -22.507, longitude: -47.562 },
+  ]
+
+  useEffect(() => {
+    setComplaints(fetchedComplaint)
+  }, [])
+
   const [viewport, setViewport] = React.useState({
     width: '100vw',
     height: '100vh',
@@ -42,10 +54,13 @@ export default function MapboxMap({ complaints }) {
             coordinates={[complaint.longitude, complaint.latitude]}
             anchor="bottom"
           >
-            <Popup>
+            <Popup
+              key={complaint.id}
+              coordinates={[complaint.longitude, complaint.latitude]}
+              anchor="bottom"
+            >
               <div>
-                <h3>{complaint.title}</h3>
-                <p>{complaint.description}</p>
+                <h3>Complaint - {complaint.id}</h3>
               </div>
             </Popup>
           </Marker>

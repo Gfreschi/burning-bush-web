@@ -23,6 +23,8 @@ export default function Home() {
         <Link href="/sessions/sign_out">Sign Out</Link>
         <br></br>
         <Link href="/complaints">Complaints</Link>
+        <br></br>
+        <Link href="/maps">Mapa</Link>
       </Layout>
     </main>
   )
