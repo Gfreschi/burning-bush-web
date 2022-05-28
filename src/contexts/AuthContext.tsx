@@ -21,24 +21,12 @@ type SignUpData = {
   password: string
 }
 
-type SignOutData = {
-  accessToken: string
-}
-
 type AuthContextType = {
   isAuthenticated: boolean
   user: User
   signIn: (data: SignInData) => Promise<void>
   signUp: (data: SignUpData) => Promise<void>
   signOut: (data: SignOutData) => Promise<void>
-}
-
-type Token = {
-  accessToken: string
-  refreshToken: string
-  tokenType: string
-  expiresIn: number
-  createdAt: number
 }
 
 export const AuthContext = createContext({} as AuthContextType)
@@ -51,7 +39,7 @@ export function AuthProvider({ children }) {
   // toda vez que este componente for renderizado, vai executar
   useEffect(() => {
     // verifica se existe um token no cookie e o renomeia para accessToken
-    const { bnb_access_token: accessToken } = parseCookies()
+    const { 'bnb_access_token': accessToken } = parseCookies()
 
     if (accessToken) {
       try {
@@ -62,7 +50,7 @@ export function AuthProvider({ children }) {
             },
           })
           .then(response => {
-            // console.log('autehnticated')
+            console.log('authenticated')
             setUser(response.data.user)
           })
       } catch (error) {
@@ -148,16 +136,27 @@ export function AuthProvider({ children }) {
   }
 
   // chamada ao backend para fazer o logout
-  async function signOut({ accessToken }: SignOutData) {
-    const { response } = await signOutRequest({ accessToken })
+  async function signOut() {
+    try {
+      const { 'bnb_access_token': accessToken } = parseCookies()
 
-    destroyCookie(undefined, 'bnb_access_token')
+      const response = await api.post('/api/v1/oauth/revoke', {
+        token: accessToken,
+        client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
+        client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
+      })
 
-    setUser(null)
+      destroyCookie(null, 'bnb_access_token')
 
-    Router.push('/')
+      setUser(undefined)
 
-    console.log(response)
+      Router.push('/')
+
+      console.log(response)
+    } catch (error) {
+      console.log(error.response) // response error data
+      return error.response
+    }
   }
 
   return (
