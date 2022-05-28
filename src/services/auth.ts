@@ -48,32 +48,33 @@ export async function signUpRequest(data: SignUpRequestData) {
 
 export async function signInRequest(data: SignInRequestData) {
   // pesquisar payload
-  const response = await api.post('/api/v1/oauth/token', {
-    email: data.email,
-    password: data.password,
-    grant_type: 'password',
-    client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
-    client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
-  })
-
-  return {
-    token: {
-      access_token: response.data.access_token,
-      refresh_token: response.data.refresh_token,
-      expires_in: response.data.expires_in,
-      token_type: response.data.token_type,
-      created_at: response.data.created_at,
-    },
-    error: {
-      status: response.data.status,
-      message: response.data.statusText,
-    },
+  try {
+    const response = await api.post(
+      '/api/v1/oauth/token',
+      JSON.stringify({
+        email: data.email,
+        password: data.password,
+        grant_type: 'password',
+        client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
+        client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    // console.log(response)
+    return response
+  } catch (error) {
+    // console.log(error.response) // response error data
+    return error.response
   }
 }
 
 export async function signOutRequest(data: SignOutRequestData) {
   const response = await api.post('/api/v1/oauth/revoke', {
-    token: data.value,
+    token: data,
     client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
     client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
   })
