@@ -19,16 +19,21 @@ export default function Index() {
   const { user } = useContext(AuthContext)
   const { data } = useFetch<Complaint[]>('/api/v1/complaints')
 
+  console.log(user)
   if (!data) {
     return <p>Loading...</p>
   }
 
   return (
     <Layout title="Complaints">
-      <h1>Complaints</h1>
-      <p>{user?.name}</p>
-      <p>{user?.email}</p>
-      <img src={user?.avatarUrl} alt="logo" />
+      <h2>User</h2>
+      <ul>
+        <li>{user?.id}</li>
+        <li>{user?.name}</li>
+        <li>{user?.email}</li>
+        <li>{user?.createdAt}</li>
+      </ul>
+      <h3>Complaints</h3>
       <ul>
         {data.map(item => (
           <li key={item.id}>

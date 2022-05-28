@@ -2,12 +2,14 @@ import React, { createContext, useEffect, useState } from 'react'
 import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import Router from 'next/router'
 
-import { signOutRequest } from '../services/auth'
 import { api } from '../services/api'
 
 type User = {
+  id: number
   name: string
   email: string
+  role: string
+  createdAt: string
   avatarUrl: string
 }
 
@@ -26,7 +28,7 @@ type AuthContextType = {
   user: User
   signIn: (data: SignInData) => Promise<void>
   signUp: (data: SignUpData) => Promise<void>
-  signOut: (data: SignOutData) => Promise<void>
+  signOut: () => Promise<void>
 }
 
 export const AuthContext = createContext({} as AuthContextType)
@@ -47,11 +49,12 @@ export function AuthProvider({ children }) {
           .get('/api/v1/users/me', {
             headers: {
               Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
             },
           })
           .then(response => {
-            console.log('authenticated')
-            setUser(response.data.user)
+            // console.log('authenticated')
+            setUser(response.data)
           })
       } catch (error) {
         return error.response
@@ -83,8 +86,6 @@ export function AuthProvider({ children }) {
         })
 
         api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`
-
-        setUser(response.data.access_token)
 
         Router.push('/')
 
@@ -122,8 +123,6 @@ export function AuthProvider({ children }) {
 
         api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`
 
-        setUser(response.data.access_token)
-
         Router.push('/')
 
         console.log(response)
@@ -147,8 +146,6 @@ export function AuthProvider({ children }) {
       })
 
       destroyCookie(null, 'bnb_access_token')
-
-      setUser(undefined)
 
       Router.push('/')
 
