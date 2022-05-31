@@ -24,7 +24,7 @@ export default function Home() {
         <br></br>
         <Link href="/complaints">Complaints</Link>
         <br></br>
-        <Link href="/maps">Mapa</Link>
+        <Link href="/maps/preview">Mapa</Link>
       </Layout>
     </main>
   )
