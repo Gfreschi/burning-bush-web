@@ -51,19 +51,19 @@ const primaryMenu = [
   {
     id: 1,
     label: 'Visita ao mapa local',
-    path: '/',
+    path: '/maps/preview',
     icon: MapIcon,
   },
   {
     id: 2,
     label: 'Queixa',
-    path: 'complaints',
+    path: '/complaints/new',
     icon: AddLocationAltIcon,
   },
   {
     id: 3,
     label: 'Listar Incidentes',
-    path: 'incidents',
+    path: '/incidents',
     icon: ListAltIcon,
   },
 ]
