@@ -1,8 +1,10 @@
+import Incident from '../Incident'
+
 function Index() {
   return (
     <>
       <div>
-        <h1>ISSO SERA UM CARD</h1>
+        <Incident item={undefined} />
       </div>
     </>
   )
