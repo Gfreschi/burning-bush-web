@@ -23,8 +23,8 @@ import { Router } from 'next/router'
 enum kindEnum {
   fire = 1,
   trash = 2,
-  flood = 'flood',
-  other = 'other',
+  flood = 3,
+  other = 4,
 }
 
 interface FormInput {
@@ -111,7 +111,7 @@ export default function NewComplaintForm() {
           </Container>
           <Box sx={{ m: 3 }}>
             <Grid container spacing={2} alignContent="center">
-              <Grid item xs={12} wrap="nowrap">
+              <Grid item xs={12}>
                 <Controller
                   name={'details'}
                   control={control}
@@ -189,18 +189,24 @@ export default function NewComplaintForm() {
                       <Select
                         labelId="kind"
                         id="kind"
-                        value={value}
+                        value={value ?? kindEnum.other}
                         label="Tipo"
                         onChange={onChange}
                       >
                         <MenuItem value={1}>Queimada</MenuItem>
                         <MenuItem value={2}>Lixo</MenuItem>
+                        <MenuItem value={3}>Alagamento</MenuItem>
+                        <MenuItem value={4}>Outro</MenuItem>
                       </Select>
                     </>
                   )}
                 />
               </Grid>
             </Grid>
+            <Button variant="contained" component="label">
+              Insira fotos aqui...
+              <input type="file" hidden />
+            </Button>
             <Button
               type="submit"
               fullWidth
