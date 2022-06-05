@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useContext } from 'react'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
 import TextField from '@mui/material/TextField'
@@ -17,10 +17,12 @@ import theme from '../../styles/theme'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { api } from '../../services/api'
+import { Router } from 'next/router'
 
 enum kindEnum {
-  fire = 'fire',
-  trash = 'trash',
+  fire = 1,
+  trash = 2,
   flood = 'flood',
   other = 'other',
 }
@@ -48,8 +50,47 @@ export default function NewComplaintForm() {
   const formOptions = { resolver: yupResolver(validationSchema) }
 
   const { control, handleSubmit } = useForm<FormInput>(formOptions)
+
+  async function createComplaint({
+    details,
+    kind,
+    severity,
+    latitude,
+    longitude,
+  }: FormInput) {
+    try {
+      const response = await api.post(
+        '/api/v1/complaints',
+        JSON.stringify({
+          details: details,
+          kind: kind,
+          severity: severity,
+          latitude: latitude,
+          longitude: longitude,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      console.log(response)
+      if (response?.data.status === '200') {
+        alert('Successfully created complaint')
+
+        // Router.push('/maps/preview')
+
+        console.log(response)
+      }
+    } catch (error) {
+      console.log(error.response) // response error data
+      return error.response
+    }
+  }
+
   const onSubmit: SubmitHandler<FormInput> = async data => {
     console.log(data)
+    createComplaint(data)
   }
 
   return (
