@@ -11,9 +11,6 @@ export default function Home() {
   // }, [])
 
   return (
-    // <Layout title="Home">
-    //   <Box p={5}>Mapa</Box>
-    // </Layout>
     <main>
       <Layout title="Home">
         <Link href="/sessions/sign_in">Sign In</Link>

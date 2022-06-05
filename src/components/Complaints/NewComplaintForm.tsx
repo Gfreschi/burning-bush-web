@@ -25,7 +25,7 @@ enum kindEnum {
   other = 'other',
 }
 
-interface IFormInput {
+interface FormInput {
   details: string
   kind: kindEnum
   severity: number
@@ -47,8 +47,8 @@ export default function NewComplaintForm() {
   // hook form validation
   const formOptions = { resolver: yupResolver(validationSchema) }
 
-  const { control, handleSubmit } = useForm<IFormInput>(formOptions)
-  const onSubmit: SubmitHandler<IFormInput> = async data => {
+  const { control, handleSubmit } = useForm<FormInput>(formOptions)
+  const onSubmit: SubmitHandler<FormInput> = async data => {
     console.log(data)
   }
 
