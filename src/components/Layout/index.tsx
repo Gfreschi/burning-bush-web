@@ -3,13 +3,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import Head from 'next/head'
 import TopBar from './TopBar'
 import NavBar from './NavBar'
+
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     display: 'flex',
     height: '100vh',
     overflow: 'hidden',
-    width: '100vh',
+    width: '100vw',
   },
   wrapper: {
     display: 'flex',
