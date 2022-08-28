@@ -8,7 +8,6 @@ export default function Preview() {
   const handleMapLoading = () => setLoading(false)
 
   return (
-
     <div className="container">
       <Layout title={'Map Preview'}>
         <WorldMapBox
