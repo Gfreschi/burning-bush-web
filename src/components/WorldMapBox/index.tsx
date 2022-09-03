@@ -1,13 +1,13 @@
 import * as React from 'react'
 import mapboxgl, { Marker } from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import NewComplaintForm from '../Complaints/NewComplaintForm'
 
 interface MapboxMapProps {
   initialOptions?: Omit<mapboxgl.MapboxOptions, 'container'>
   onCreated?(map: mapboxgl.Map): void
   onLoaded?(map: mapboxgl.Map): void
   onRemoved?(): void
-  onComplaintRegistration?(): void
 }
 
 type Incidents = {
@@ -46,7 +46,6 @@ function MapboxMap({
   onCreated,
   onLoaded,
   onRemoved,
-  onComplaintRegistration,
 }: MapboxMapProps) {
   const [map, setMap] = React.useState<mapboxgl.Map>()
   const [complaintCoordinates, setComplaintCoordinates] =
@@ -153,32 +152,32 @@ function MapboxMap({
       // show the form to create a new complaint and save the coordinates
       map.on('click', e => {
         const handleClick = () => {
-          alert('hello')
+          renderComplaintForm(e.lngLat)
         }
 
         const divElement = document.createElement('div')
 
         const assignBtn = document.createElement('div')
 
-        assignBtn.innerHTML = `<button type="button" onClick=${handleClick}>Register</button>`
+        assignBtn.innerHTML = `<button type="button">Register</button>`
 
-        const innerHTMLContent = `
+        divElement.innerHTML = `
         <div>
           <h3>Complaint Registration</h3>
           <p>Latitude: ${e.lngLat.lat}</p>
           <p>Longitude: ${e.lngLat.lng}</p>
         </div>`
 
-        divElement.innerHTML = innerHTMLContent
         divElement.appendChild(assignBtn)
 
         assignBtn.addEventListener('click', () => {
           handleClick()
         })
 
-        const marker = new mapboxgl.Marker().setLngLat(e.lngLat).addTo(map)
-        // add a popup to the marker and open it
-        const popup = marker
+        const marker = new mapboxgl.Marker()
+          .setLngLat(e.lngLat)
+          .addTo(map)
+          // add a popup to the marker and open it
           .setPopup(
             new mapboxgl.Popup({ offset: 25 }) // add popups
               .setDOMContent(divElement)
@@ -196,9 +195,25 @@ function MapboxMap({
       setMap(undefined)
       if (onRemoved) onRemoved()
     }
-  }, [initialOptions, onCreated, onLoaded, onRemoved, onComplaintRegistration])
+  }, [initialOptions, onCreated, onLoaded, onRemoved])
 
-  return <div ref={mapNode} style={{ width: '100%', height: '100%' }} />
+  function renderComplaintForm(coordinates: mapboxgl.LngLat) {
+    return (
+      <div>
+        <NewComplaintForm
+          longitude={coordinates.lng}
+          latitude={coordinates.lat}
+        />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div ref={mapNode} style={{ width: '100%', height: '100%' }}>
+      </div>
+    </>
+  )
 }
 
 export default MapboxMap

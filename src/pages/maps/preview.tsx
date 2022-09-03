@@ -9,11 +9,10 @@ export default function Preview() {
 
   return (
     <div className="container">
-      <Layout title={'Map Preview'}>
+      <Layout title={'Map'}>
         <WorldMapBox
           initialOptions={{ center: [-47.57, -22.41] }}
           onLoaded={handleMapLoading}
-          onComplaintRegistration={() => console.log('Complaint registered')}
         />
         {loading && <MapLoadingHolder className="loading-holder" />}
       </Layout>
