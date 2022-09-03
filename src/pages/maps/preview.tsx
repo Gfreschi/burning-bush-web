@@ -13,6 +13,7 @@ export default function Preview() {
         <WorldMapBox
           initialOptions={{ center: [-47.57, -22.41] }}
           onLoaded={handleMapLoading}
+          onComplaintRegistration={() => console.log('Complaint registered')}
         />
         {loading && <MapLoadingHolder className="loading-holder" />}
       </Layout>

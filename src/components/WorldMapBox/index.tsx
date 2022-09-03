@@ -7,7 +7,7 @@ interface MapboxMapProps {
   onCreated?(map: mapboxgl.Map): void
   onLoaded?(map: mapboxgl.Map): void
   onRemoved?(): void
-  onComplaintCreation(): string
+  onComplaintRegistration?(): void
 }
 
 type Incidents = {
@@ -46,11 +46,11 @@ function MapboxMap({
   onCreated,
   onLoaded,
   onRemoved,
-  onComplaintCreation,
+  onComplaintRegistration,
 }: MapboxMapProps) {
   const [map, setMap] = React.useState<mapboxgl.Map>()
-  const [complaint, setComplaint] = React.useState('undefined')
-  const [marker, setMarker] = React.useState<mapboxgl.Marker>()
+  const [complaintCoordinates, setComplaintCoordinates] =
+    React.useState<mapboxgl.LngLat>(null)
 
   const mapNode = React.useRef(null)
 
@@ -152,24 +152,42 @@ function MapboxMap({
       // When click in the map, create a marker, add to the map and save the coordinates
       // show the form to create a new complaint and save the coordinates
       map.on('click', e => {
-        const newMarker = new mapboxgl.Marker()
-          .setLngLat(e.lngLat)
-          .addTo(map)
+        const handleClick = () => {
+          alert('hello')
+        }
 
-          // add a popup to the marker and open it
-          .setPopup(
-            new mapboxgl.Popup({ offset: 25 }) // add popups
-              .setHTML(
-                `Add a new complaint here? <button onClick={onComplaintCreation}>New</button>`
-              )
-          )
-          .togglePopup()
+        const divElement = document.createElement('div')
 
-        // remove the marker when the popup is closed
-        newMarker.getPopup().once('close', () => {
-          newMarker.remove()
+        const assignBtn = document.createElement('div')
+
+        assignBtn.innerHTML = `<button type="button" onClick=${handleClick}>Register</button>`
+
+        const innerHTMLContent = `
+        <div>
+          <h3>Complaint Registration</h3>
+          <p>Latitude: ${e.lngLat.lat}</p>
+          <p>Longitude: ${e.lngLat.lng}</p>
+        </div>`
+
+        divElement.innerHTML = innerHTMLContent
+        divElement.appendChild(assignBtn)
+
+        assignBtn.addEventListener('click', () => {
+          handleClick()
         })
 
+        const marker = new mapboxgl.Marker().setLngLat(e.lngLat).addTo(map)
+        // add a popup to the marker and open it
+        const popup = marker
+          .setPopup(
+            new mapboxgl.Popup({ offset: 25 }) // add popups
+              .setDOMContent(divElement)
+          )
+          .togglePopup()
+        // remove the marker when the popup is closed
+        marker.getPopup().once('close', () => {
+          marker.remove()
+        })
       })
     })
 
@@ -178,35 +196,9 @@ function MapboxMap({
       setMap(undefined)
       if (onRemoved) onRemoved()
     }
-  }, [initialOptions, onCreated, onLoaded, onRemoved, onComplaintCreation])
+  }, [initialOptions, onCreated, onLoaded, onRemoved, onComplaintRegistration])
 
   return <div ref={mapNode} style={{ width: '100%', height: '100%' }} />
 }
 
 export default MapboxMap
-
-// // function to verify if there is a marker on the map
-// function hasMarker() {
-//   if (map.getLayer('marker')) {
-//     return true
-//   } else {
-//     return false
-//   }
-// }
-// // function to remove the last marker from the map
-// function removeMarker() {
-//   if (hasMarker()) {
-//     map.removeLayer('marker')
-//     map.removeSource('marker')
-//   }
-// }
-// // function to add a marker on the map
-// function addMarker() {
-//   const marker = new mapboxgl.Marker().setLngLat(e.lngLat).addTo(map)
-//   setComplaint(marker)
-// }
-// set the state of the complaint
-// setComplaint({
-//   longitude: e.lngLat.lng,
-//   latitude: e.lngLat.lat,
-// })
