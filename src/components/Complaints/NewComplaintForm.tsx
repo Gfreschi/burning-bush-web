@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import FormControl from '@mui/material/FormControl'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
 import TextField from '@mui/material/TextField'
@@ -21,7 +22,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { api } from '../../services/api'
-import { Router } from 'next/router'
+import { FormLabel } from '@material-ui/core'
 
 enum kindEnum {
   fire = 1,
@@ -34,6 +35,12 @@ interface FormInput {
   details: string
   kind: kindEnum
   severity: number
+}
+
+interface Complaint {
+  details: string
+  severity: number
+  kind: number
   longitude: number
   latitude: number
 }
@@ -62,9 +69,9 @@ export default function NewComplaintForm({
     details,
     kind,
     severity,
-    latitude,
     longitude,
-  }: FormInput) {
+    latitude,
+  }: Complaint) {
     try {
       const response = await api.post(
         '/api/v1/complaints',
@@ -72,8 +79,8 @@ export default function NewComplaintForm({
           details: details,
           kind: kind,
           severity: severity,
-          latitude: latitudeProp,
-          longitude: longitudeProp,
+          longitude: latitudeProp,
+          latitude: longitudeProp,
         }),
         {
           headers: {
@@ -81,27 +88,25 @@ export default function NewComplaintForm({
           },
         }
       )
-      console.log(response)
       if (response?.data.status === '200') {
         alert('Successfully created complaint')
-
-        // Router.push('/maps/preview')
-
-        console.log(response)
       }
     } catch (error) {
+      alert('Error creating complaint')
       console.log(error.response) // response error data
       return error.response
     }
   }
 
   // handle prop as data for the form
-  const onSubmit: SubmitHandler<FormInput> = async data => {
-    console.log(data)
+  const onSubmit: SubmitHandler<FormInput> = async (formData: FormInput) => {
+    console.log(formData)
+    console.log(longitudeProp)
+    console.log(latitudeProp)
     createComplaint({
-      details: data.details,
-      severity: data.severity,
-      kind: data.kind,
+      details: formData.details,
+      severity: formData.severity,
+      kind: formData.kind,
       longitude: longitudeProp,
       latitude: latitudeProp,
     })
@@ -139,69 +144,78 @@ export default function NewComplaintForm({
               <Box sx={{ m: 2, padding: 1 }}>
                 <Grid container spacing={2} alignContent="center">
                   <Grid item xs={12}>
-                    <Controller
-                      name={'details'}
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          id="details"
-                          type="text"
-                          onChange={onChange}
-                          value={value}
-                          label={'Detalhes'}
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography sx={{ m: 1 }} component="legend">
-                      Severidade
-                    </Typography>
-                    <Controller
-                      name={'severity'}
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <Rating
-                          name="severity"
-                          size="large"
-                          defaultValue={value ?? 2}
-                          precision={1}
-                          max={5}
-                          icon={<LocalFireDepartmentIcon fontSize="inherit" />}
-                          emptyIcon={
-                            <LocalFireDepartmentIcon fontSize="inherit" />
-                          }
-                          value={value}
-                          onChange={onChange}
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name={'kind'}
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <>
-                          <InputLabel id="kind">Tipo</InputLabel>
-                          <Select
-                            sx={{ minWidth: '30%' }}
-                            labelId="kind"
-                            id="kind"
-                            value={value ?? kindEnum.other}
-                            label="Tipo"
+                    <FormControl fullWidth>
+                      <Controller
+                        name={'details'}
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                          <TextField
+                            multiline
+                            maxRows={4}
+                            id="details"
+                            type="text"
                             onChange={onChange}
-                            autoWidth
-                          >
-                            <MenuItem value={1}>Queimada</MenuItem>
-                            <MenuItem value={2}>Lixo</MenuItem>
-                            <MenuItem value={3}>Alagamento</MenuItem>
-                            <MenuItem value={4}>Outro</MenuItem>
-                          </Select>
-                        </>
-                      )}
-                    />
+                            value={value}
+                            label={'Detalhes'}
+                          />
+                        )}
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl>
+                      <Typography sx={{ m: 1 }} component="legend">
+                        Severidade
+                      </Typography>
+                      <Controller
+                        name={'severity'}
+                        control={control}
+                        defaultValue={2}
+                        render={({ field: { onChange, value } }) => (
+                          <Rating
+                            name="severity"
+                            size="large"
+                            precision={1}
+                            max={5}
+                            icon={
+                              <LocalFireDepartmentIcon fontSize="inherit" />
+                            }
+                            emptyIcon={
+                              <LocalFireDepartmentIcon fontSize="inherit" />
+                            }
+                            value={value}
+                            onChange={onChange}
+                          />
+                        )}
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl>
+                      <Controller
+                        name={'kind'}
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                          <>
+                            <InputLabel id="kind">Tipo</InputLabel>
+                            <Select
+                              sx={{ minWidth: '30%' }}
+                              labelId="kind"
+                              id="kind"
+                              value={value ?? kindEnum.other}
+                              label="Tipo"
+                              onChange={onChange}
+                              autoWidth
+                            >
+                              <MenuItem value={1}>Queimada</MenuItem>
+                              <MenuItem value={2}>Lixo</MenuItem>
+                              <MenuItem value={3}>Alagamento</MenuItem>
+                              <MenuItem value={4}>Outro</MenuItem>
+                            </Select>
+                          </>
+                        )}
+                      />
+                    </FormControl>
                   </Grid>
                   <Grid item xs={12} sx={{ mb: 1 }}>
                     <Button

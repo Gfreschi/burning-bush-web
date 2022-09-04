@@ -202,8 +202,8 @@ function MapboxMap({
     return (
       <div>
         <NewComplaintForm
-          longitude={coordinates.lng}
-          latitude={coordinates.lat}
+          longitudeProp={coordinates.lng}
+          latitudeProp={coordinates.lat}
         />
       </div>
     )

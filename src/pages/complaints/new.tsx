@@ -6,7 +6,7 @@ export default function New() {
     <>
       <Layout title="New Complaints">
         <div>
-          <NewComplaintForm longitude={0} latitude={0} />
+          <NewComplaintForm longitudeProp={0} latitudeProp={0} />
         </div>
       </Layout>
     </>
