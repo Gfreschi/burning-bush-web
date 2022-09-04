@@ -201,10 +201,14 @@ function MapboxMap({
   function renderComplaintForm(coordinates: mapboxgl.LngLat) {
     return (
       <div>
-        <NewComplaintForm
-          longitudeProp={coordinates.lng}
-          latitudeProp={coordinates.lat}
-        />
+        <>
+          <NewComplaintForm
+            complaintCoodinate={{
+              longitude: coordinates.lng,
+              latitude: coordinates.lat,
+            }}
+          />
+        </>
       </div>
     )
   }

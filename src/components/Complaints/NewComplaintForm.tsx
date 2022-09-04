@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useState } from 'react'
 import FormControl from '@mui/material/FormControl'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography'
 import Rating from '@mui/material/Rating'
 import Paper from '@mui/material/Paper'
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
+import CircularProgress from '@mui/material/CircularProgress'
 import SendIcon from '@mui/icons-material/Send'
 import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded'
 import { ThemeProvider } from '@mui/material/styles'
@@ -22,7 +23,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { api } from '../../services/api'
-import { FormLabel } from '@material-ui/core'
+import { useSnackbar } from 'notistack'
 
 enum kindEnum {
   fire = 1,
@@ -44,43 +45,46 @@ interface Complaint {
   longitude: number
   latitude: number
 }
+interface ComplaintFormProps {
+  complaintCoodinate: {
+    latitude: number
+    longitude: number
+  }
+}
 
 // Yup validation schema for form input data
 // Replicated schema from the backend
 const validationSchema = Yup.object().shape({
-  details: Yup.string().required('Details is required'),
+  details: Yup.string(),
   kind: Yup.string().required('Kind is required'),
   severity: Yup.number().required('Severity is required'),
 })
 
-export default function NewComplaintForm({
-  longitudeProp,
-  latitudeProp,
-}: {
-  longitudeProp: number
-  latitudeProp: number
-}) {
-  // hook form validation
+export default function NewComplaintForm(
+  props: ComplaintFormProps
+): JSX.Element {
+  const [show, setShow] = useState<boolean>(true)
   const formOptions = { resolver: yupResolver(validationSchema) }
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<FormInput>(formOptions)
 
-  const { control, handleSubmit } = useForm<FormInput>(formOptions)
+  const { enqueueSnackbar } = useSnackbar()
 
-  async function createComplaint({
-    details,
-    kind,
-    severity,
-    longitude,
-    latitude,
-  }: Complaint) {
+  // function to call api
+  async function createComplaint(data: Complaint) {
     try {
       const response = await api.post(
         '/api/v1/complaints',
         JSON.stringify({
-          details: details,
-          kind: kind,
-          severity: severity,
-          longitude: latitudeProp,
-          latitude: longitudeProp,
+          details: data.details,
+          kind: data.kind,
+          severity: data.severity,
+          longitude: data.latitude,
+          latitude: data.longitude,
         }),
         {
           headers: {
@@ -88,31 +92,49 @@ export default function NewComplaintForm({
           },
         }
       )
-      if (response?.data.status === '200') {
-        alert('Successfully created complaint')
+      if (response?.status === 201) {
+        return response.data
+      } else {
+        return null
       }
     } catch (error) {
-      alert('Error creating complaint')
-      console.log(error.response) // response error data
-      return error.response
+      return null
     }
   }
 
   // handle prop as data for the form
   const onSubmit: SubmitHandler<FormInput> = async (formData: FormInput) => {
-    console.log(formData)
-    console.log(longitudeProp)
-    console.log(latitudeProp)
-    createComplaint({
-      details: formData.details,
-      severity: formData.severity,
-      kind: formData.kind,
-      longitude: longitudeProp,
-      latitude: latitudeProp,
-    })
+    const { details, kind, severity } = formData
+
+    const { latitude, longitude } = props.complaintCoodinate
+
+    const complaintResquestData: Complaint = {
+      details: details,
+      kind: kind,
+      severity: severity,
+      longitude: longitude,
+      latitude: latitude,
+    }
+
+    console.log(complaintResquestData)
+
+    const response = await createComplaint(complaintResquestData)
+    if (response) {
+      enqueueSnackbar('Queixa criada com sucesso!', {
+        variant: 'success',
+        autoHideDuration: 2000,
+      })
+      reset()
+      setShow(false)
+    } else {
+      enqueueSnackbar('Erro ao criar queixa', {
+        variant: 'error',
+        autoHideDuration: 3000,
+      })
+    }
   }
 
-  return (
+  return show ? (
     <>
       <ThemeProvider theme={theme}>
         <Container
@@ -144,78 +166,91 @@ export default function NewComplaintForm({
               <Box sx={{ m: 2, padding: 1 }}>
                 <Grid container spacing={2} alignContent="center">
                   <Grid item xs={12}>
-                    <FormControl fullWidth>
-                      <Controller
-                        name={'details'}
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                          <TextField
-                            multiline
-                            maxRows={4}
-                            id="details"
-                            type="text"
-                            onChange={onChange}
-                            value={value}
-                            label={'Detalhes'}
-                          />
-                        )}
-                      />
-                    </FormControl>
+                    <Controller
+                      name={'details'}
+                      control={control}
+                      defaultValue=""
+                      render={({ field: { onChange, value }, formState }) => (
+                        <>
+                          <FormControl fullWidth>
+                            <TextField
+                              multiline
+                              maxRows={4}
+                              id="details"
+                              type="text"
+                              onChange={onChange}
+                              value={value}
+                              label={'Detalhes'}
+                              error={!!formState.errors.details}
+                            />
+                          </FormControl>
+                        </>
+                      )}
+                    />
                   </Grid>
                   <Grid item xs={12}>
-                    <FormControl>
-                      <Typography sx={{ m: 1 }} component="legend">
-                        Severidade
-                      </Typography>
-                      <Controller
-                        name={'severity'}
-                        control={control}
-                        defaultValue={2}
-                        render={({ field: { onChange, value } }) => (
-                          <Rating
-                            name="severity"
-                            size="large"
-                            precision={1}
-                            max={5}
-                            icon={
-                              <LocalFireDepartmentIcon fontSize="inherit" />
-                            }
-                            emptyIcon={
-                              <LocalFireDepartmentIcon fontSize="inherit" />
-                            }
-                            value={value}
-                            onChange={onChange}
-                          />
-                        )}
-                      />
-                    </FormControl>
+                    <Controller
+                      name={'severity'}
+                      control={control}
+                      defaultValue={2}
+                      render={({ field: { onChange, value }, formState }) => (
+                        <>
+                          <FormControl
+                            required
+                            fullWidth
+                            component={'fieldset'}
+                            variant={'standard'}
+                            error={!!formState.errors.severity}
+                          >
+                            <Typography sx={{ m: 1 }} component="legend">
+                              Severidade
+                            </Typography>
+                            <Rating
+                              name="severity"
+                              size="large"
+                              precision={1}
+                              max={5}
+                              icon={
+                                <LocalFireDepartmentIcon fontSize="inherit" />
+                              }
+                              emptyIcon={
+                                <LocalFireDepartmentIcon fontSize="inherit" />
+                              }
+                              value={value}
+                              onChange={onChange}
+                            />
+                          </FormControl>
+                        </>
+                      )}
+                    />
                   </Grid>
                   <Grid item xs={12}>
-                    <FormControl>
-                      <Controller
-                        name={'kind'}
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                          <>
+                    <Controller
+                      name={'kind'}
+                      control={control}
+                      render={({ field: { onChange, value }, formState }) => (
+                        <>
+                          <FormControl sx={{ minWidth: '80px' }}>
                             <InputLabel id="kind">Tipo</InputLabel>
                             <Select
-                              sx={{ minWidth: '30%' }}
                               labelId="kind"
                               id="kind"
-                              value={value ?? kindEnum.other}
+                              value={value ?? ''}
                               label="Tipo"
                               onChange={onChange}
                               autoWidth
+                              required
+                              error={!!formState.errors.kind}
                             >
                               <MenuItem value={1}>Queimada</MenuItem>
                               <MenuItem value={2}>Lixo</MenuItem>
                               <MenuItem value={3}>Alagamento</MenuItem>
                               <MenuItem value={4}>Outro</MenuItem>
                             </Select>
-                          </>
-                        )}
-                      />
-                    </FormControl>
+                          </FormControl>
+                        </>
+                      )}
+                    />
                   </Grid>
                   <Grid item xs={12} sx={{ mb: 1 }}>
                     <Button
@@ -233,10 +268,15 @@ export default function NewComplaintForm({
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
-                  onClick={handleSubmit(onSubmit)}
                   endIcon={<SendIcon />}
+                  onClick={handleSubmit(onSubmit)}
+                  disabled={isSubmitting}
                 >
-                  Criar
+                  {isSubmitting ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    'Criar'
+                  )}
                 </Button>
               </Box>
             </Paper>
@@ -244,5 +284,5 @@ export default function NewComplaintForm({
         </Container>
       </ThemeProvider>
     </>
-  )
+  ) : null
 }
