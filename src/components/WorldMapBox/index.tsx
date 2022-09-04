@@ -152,6 +152,7 @@ function MapboxMap({
       // show the form to create a new complaint and save the coordinates
       map.on('click', e => {
         const handleClick = () => {
+          setComplaintCoordinates(e.lngLat)
           renderComplaintForm(e.lngLat)
         }
 
@@ -211,6 +212,7 @@ function MapboxMap({
   return (
     <>
       <div ref={mapNode} style={{ width: '100%', height: '100%' }}>
+        {complaintCoordinates && renderComplaintForm(complaintCoordinates)}
       </div>
     </>
   )

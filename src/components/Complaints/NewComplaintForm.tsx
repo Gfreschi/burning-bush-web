@@ -44,16 +44,14 @@ const validationSchema = Yup.object().shape({
   details: Yup.string().required('Details is required'),
   kind: Yup.string().required('Kind is required'),
   severity: Yup.number().required('Severity is required'),
-  latitude: Yup.number().required('Latitude is required'),
-  longitude: Yup.number().required('Longitude is required'),
 })
 
 export default function NewComplaintForm({
-  longitude,
-  latitude,
+  longitudeProp,
+  latitudeProp,
 }: {
-  longitude: number
-  latitude: number
+  longitudeProp: number
+  latitudeProp: number
 }) {
   // hook form validation
   const formOptions = { resolver: yupResolver(validationSchema) }
@@ -74,8 +72,8 @@ export default function NewComplaintForm({
           details: details,
           kind: kind,
           severity: severity,
-          latitude: latitude,
-          longitude: longitude,
+          latitude: latitudeProp,
+          longitude: longitudeProp,
         }),
         {
           headers: {
@@ -97,9 +95,16 @@ export default function NewComplaintForm({
     }
   }
 
+  // handle prop as data for the form
   const onSubmit: SubmitHandler<FormInput> = async data => {
     console.log(data)
-    createComplaint(data)
+    createComplaint({
+      details: data.details,
+      severity: data.severity,
+      kind: data.kind,
+      longitude: longitudeProp,
+      latitude: latitudeProp,
+    })
   }
 
   return (
@@ -145,38 +150,6 @@ export default function NewComplaintForm({
                           onChange={onChange}
                           value={value}
                           label={'Detalhes'}
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name={'latitude'}
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          id="latitude"
-                          type="number"
-                          onChange={onChange}
-                          value={value}
-                          label={'Latitude'}
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name={'longitude'}
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          id="longitude"
-                          type="number"
-                          onChange={onChange}
-                          value={value}
-                          label={'Longitude'}
                         />
                       )}
                     />
