@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Layout from '../components/Layout'
 import { Box, Grid } from '@material-ui/core'
 import Incident from '../components/Incident'
+import DefaultCard from '../components/DefaultCard'
 
 function Home({ data }) {
   // debug do contexto de autenticacao
@@ -15,10 +16,16 @@ function Home({ data }) {
     <main>
       <Layout title="Home">
         <Box p={2}>
-          <Grid container spacing={4}>
+          <Grid
+            container
+            spacing={4}
+            direction="row"
+            justifyContent="center"
+            alignItems="flex-start"
+          >
             {data.map((item: { id: React.Key }) => (
-              <Grid item key={item.id} xl={3} lg={3} md={4} sm={6} xs={12}>
-                <Incident item={item} />
+              <Grid item key={item.id} xl={3} lg={5} md={4} sm={6} xs={12}>
+                <DefaultCard item={item} classes={undefined} />
               </Grid>
             ))}
           </Grid>

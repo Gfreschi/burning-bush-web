@@ -28,9 +28,11 @@ export default function MyApp(props: MyAppProps) {
       <AuthProvider>
         <SnackbarProvider maxSnack={3}>
           <ThemeProvider theme={theme}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            <Component {...pageProps} />
+            <React.StrictMode>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              <Component {...pageProps} />
+            </React.StrictMode>
           </ThemeProvider>
         </SnackbarProvider>
       </AuthProvider>

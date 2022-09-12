@@ -200,6 +200,7 @@ export default function NewComplaintForm(
                             fullWidth
                             component={'fieldset'}
                             variant={'standard'}
+                            defaultValue={2}
                             error={!!formState.errors.severity}
                           >
                             <Typography sx={{ m: 1 }} component="legend">
