@@ -14,7 +14,6 @@ function Home({ data }) {
 
   return (
     <main>
-      <Layout title="Home">
         <Box p={2}>
           <Grid
             container
@@ -30,7 +29,6 @@ function Home({ data }) {
             ))}
           </Grid>
         </Box>
-      </Layout>
     </main>
   )
 }

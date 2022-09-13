@@ -25,6 +25,7 @@ export default class MyDocument extends Document {
             href="../public/fav-icon-bush-16px.png"
             type="image/x-icon"
           />
+          <meta name="emotion-insertion-point" content="" />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {(this.props as any).emotionStyleTags}
         </Head>

@@ -16,7 +16,7 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
 import CircularProgress from '@mui/material/CircularProgress'
 import SendIcon from '@mui/icons-material/Send'
 import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded'
-import { ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
 import theme from '../../styles/theme'
 // importation for the useForm hook
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
@@ -24,6 +24,13 @@ import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { api } from '../../services/api'
 import { useSnackbar } from 'notistack'
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 enum kindEnum {
   fire = 1,
@@ -136,154 +143,156 @@ export default function NewComplaintForm(
 
   return show ? (
     <>
-      <ThemeProvider theme={theme}>
-        <Container
-          component="main"
-          maxWidth="xs"
-          sx={{
-            position: 'absolute',
-            float: 'right',
-            right: 0,
-            top: 64,
-            zIndex: 1,
-            borderRadius: 2,
-          }}
-        >
-          <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            padding={2}
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Container
+            component="main"
+            maxWidth="xs"
+            sx={{
+              position: 'absolute',
+              float: 'right',
+              right: 0,
+              top: 64,
+              zIndex: 1,
+              borderRadius: 2,
+            }}
           >
-            <Paper elevation={3} sx={{ borderRadius: 2 }}>
-              <CssBaseline />
-              <Container>
-                <Typography sx={{ p: 2 }} variant="h4">
-                  Crie uma nova queixa
-                </Typography>
-              </Container>
-              <Box sx={{ m: 2, padding: 1 }}>
-                <Grid container spacing={2} alignContent="center">
-                  <Grid item xs={12}>
-                    <Controller
-                      name={'details'}
-                      control={control}
-                      defaultValue=""
-                      render={({ field: { onChange, value }, formState }) => (
-                        <>
-                          <FormControl fullWidth>
-                            <TextField
-                              multiline
-                              maxRows={4}
-                              id="details"
-                              type="text"
-                              onChange={onChange}
-                              value={value}
-                              label={'Detalhes'}
-                              error={!!formState.errors.details}
-                            />
-                          </FormControl>
-                        </>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name={'severity'}
-                      control={control}
-                      defaultValue={2}
-                      render={({ field: { onChange, value }, formState }) => (
-                        <>
-                          <FormControl
-                            required
-                            fullWidth
-                            component={'fieldset'}
-                            variant={'standard'}
-                            defaultValue={2}
-                            error={!!formState.errors.severity}
-                          >
-                            <Typography sx={{ m: 1 }} component="legend">
-                              Severidade
-                            </Typography>
-                            <Rating
-                              name="severity"
-                              size="large"
-                              precision={1}
-                              max={5}
-                              icon={
-                                <LocalFireDepartmentIcon fontSize="inherit" />
-                              }
-                              emptyIcon={
-                                <LocalFireDepartmentIcon fontSize="inherit" />
-                              }
-                              value={value}
-                              onChange={onChange}
-                            />
-                          </FormControl>
-                        </>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name={'kind'}
-                      control={control}
-                      render={({ field: { onChange, value }, formState }) => (
-                        <>
-                          <FormControl sx={{ minWidth: '80px' }}>
-                            <InputLabel id="kind">Tipo</InputLabel>
-                            <Select
-                              labelId="kind"
-                              id="kind"
-                              value={value ?? ''}
-                              label="Tipo"
-                              onChange={onChange}
-                              autoWidth
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              padding={2}
+            >
+              <Paper elevation={3} sx={{ borderRadius: 2 }}>
+                <CssBaseline />
+                <Container>
+                  <Typography sx={{ p: 2 }} variant="h4">
+                    Crie uma nova queixa
+                  </Typography>
+                </Container>
+                <Box sx={{ m: 2, padding: 1 }}>
+                  <Grid container spacing={2} alignContent="center">
+                    <Grid item xs={12}>
+                      <Controller
+                        name={'details'}
+                        control={control}
+                        defaultValue=""
+                        render={({ field: { onChange, value }, formState }) => (
+                          <>
+                            <FormControl fullWidth>
+                              <TextField
+                                multiline
+                                maxRows={4}
+                                id="details"
+                                type="text"
+                                onChange={onChange}
+                                value={value}
+                                label={'Detalhes'}
+                                error={!!formState.errors.details}
+                              />
+                            </FormControl>
+                          </>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name={'severity'}
+                        control={control}
+                        defaultValue={2}
+                        render={({ field: { onChange, value }, formState }) => (
+                          <>
+                            <FormControl
                               required
-                              error={!!formState.errors.kind}
+                              fullWidth
+                              component={'fieldset'}
+                              variant={'standard'}
+                              defaultValue={2}
+                              error={!!formState.errors.severity}
                             >
-                              <MenuItem value={1}>Queimada</MenuItem>
-                              <MenuItem value={2}>Lixo</MenuItem>
-                              <MenuItem value={3}>Alagamento</MenuItem>
-                              <MenuItem value={4}>Outro</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </>
-                      )}
-                    />
+                              <Typography sx={{ m: 1 }} component="legend">
+                                Severidade
+                              </Typography>
+                              <Rating
+                                name="severity"
+                                size="large"
+                                precision={1}
+                                max={5}
+                                icon={
+                                  <LocalFireDepartmentIcon fontSize="inherit" />
+                                }
+                                emptyIcon={
+                                  <LocalFireDepartmentIcon fontSize="inherit" />
+                                }
+                                value={value}
+                                onChange={onChange}
+                              />
+                            </FormControl>
+                          </>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name={'kind'}
+                        control={control}
+                        render={({ field: { onChange, value }, formState }) => (
+                          <>
+                            <FormControl sx={{ minWidth: '80px' }}>
+                              <InputLabel id="kind">Tipo</InputLabel>
+                              <Select
+                                labelId="kind"
+                                id="kind"
+                                value={value ?? ''}
+                                label="Tipo"
+                                onChange={onChange}
+                                autoWidth
+                                required
+                                error={!!formState.errors.kind}
+                              >
+                                <MenuItem value={1}>Queimada</MenuItem>
+                                <MenuItem value={2}>Lixo</MenuItem>
+                                <MenuItem value={3}>Alagamento</MenuItem>
+                                <MenuItem value={4}>Outro</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sx={{ mb: 1 }}>
+                      <Button
+                        variant="contained"
+                        component="label"
+                        endIcon={<AddPhotoAlternateRoundedIcon />}
+                      >
+                        Insira fotos aqui...
+                        <input type="file" hidden />
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sx={{ mb: 1 }}>
-                    <Button
-                      variant="contained"
-                      component="label"
-                      endIcon={<AddPhotoAlternateRoundedIcon />}
-                    >
-                      Insira fotos aqui...
-                      <input type="file" hidden />
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  endIcon={<SendIcon />}
-                  onClick={handleSubmit(onSubmit)}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <CircularProgress size={24} color="inherit" />
-                  ) : (
-                    'Criar'
-                  )}
-                </Button>
-              </Box>
-            </Paper>
-          </Grid>
-        </Container>
-      </ThemeProvider>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    endIcon={<SendIcon />}
+                    onClick={handleSubmit(onSubmit)}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <CircularProgress size={24} color="inherit" />
+                    ) : (
+                      'Criar'
+                    )}
+                  </Button>
+                </Box>
+              </Paper>
+            </Grid>
+          </Container>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </>
-  ) : null
+  ) : null;
 }
