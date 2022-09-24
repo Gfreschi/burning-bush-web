@@ -2,6 +2,8 @@ import * as React from 'react'
 import mapboxgl, { Marker } from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import NewComplaintForm from '../Complaints/NewComplaintForm'
+import { AuthContext } from '../../contexts/AuthContext'
+import { useSnackbar } from 'notistack'
 
 interface MapboxMapProps {
   initialOptions?: Omit<mapboxgl.MapboxOptions, 'container'>
@@ -47,6 +49,8 @@ function MapboxMap({
   onLoaded,
   onRemoved,
 }: MapboxMapProps) {
+  const { isAuthenticated } = React.useContext(AuthContext)
+  const { enqueueSnackbar } = useSnackbar()
   const [map, setMap] = React.useState<mapboxgl.Map>()
   const [complaintCoordinates, setComplaintCoordinates] =
     React.useState<mapboxgl.LngLat>(null)
@@ -68,7 +72,11 @@ function MapboxMap({
       ...initialOptions,
     })
 
-    setMap(mapboxMap)
+    const mustAuthenticateAlert = () => {
+      enqueueSnackbar('Você precisa estar logado para criar uma queixa', {
+        variant: 'error',
+      })
+    }
 
     const map = mapboxMap
 
@@ -107,6 +115,8 @@ function MapboxMap({
           'icon-allow-overlap': true,
         },
       })
+
+      map.addControl(new mapboxgl.NavigationControl())
 
       // when a hover event occurs on a feature in the places layer, open a popup at the
       // location of the feature, with description HTML from its properties.
@@ -152,8 +162,12 @@ function MapboxMap({
       // show the form to create a new complaint and save the coordinates
       map.on('click', e => {
         const handleClick = () => {
-          setComplaintCoordinates(e.lngLat)
-          renderComplaintForm(e.lngLat)
+          if (isAuthenticated) {
+            setComplaintCoordinates(e.lngLat)
+            renderComplaintForm(e.lngLat)
+          } else {
+            mustAuthenticateAlert()
+          }
         }
 
         const divElement = document.createElement('div')
