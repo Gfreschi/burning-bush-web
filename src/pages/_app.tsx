@@ -8,6 +8,7 @@ import createEmotionCache from '../styles/createEmotionCache'
 import theme from '../styles/theme'
 import { AuthProvider } from '../contexts/AuthContext'
 import { SnackbarProvider } from 'notistack'
+import { IncidentsProvider } from 'src/contexts/IncidentsContext'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -31,7 +32,9 @@ export default function MyApp(props: MyAppProps) {
             <React.StrictMode>
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
-              <Component {...pageProps} />
+              <IncidentsProvider>
+                <Component {...pageProps} />
+              </IncidentsProvider>
             </React.StrictMode>
           </ThemeProvider>
         </SnackbarProvider>
