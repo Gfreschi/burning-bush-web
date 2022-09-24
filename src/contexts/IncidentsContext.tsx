@@ -2,12 +2,13 @@ import * as React from 'react'
 import { Incident } from 'src/types/Incident'
 import { api } from 'src/services/api'
 
-interface IncidentsContextType {
+type IncidentsContextType = {
   children?: React.ReactNode
   initialOptions?: {
-    incidentCollection: Incident[]
-    hasIncidents: boolean
+    userCoordinates?: [number, number]
   }
+  incidentCollection: Incident[]
+  hasIncidents: boolean
 }
 
 const IncidentsContext = React.createContext({} as IncidentsContextType)
@@ -26,13 +27,12 @@ const useIncidentsContext = () => {
 function IncidentsProvider({
   children,
   initialOptions = {
-    incidentCollection: [],
-    hasIncidents: false,
+    userCoordinates: [-47.57, -22.41],
   },
 }: IncidentsContextType) {
   const [incidentCollection, setIncidentCollection] = React.useState<
     Incident[]
-  >(initialOptions.incidentCollection || [])
+  >([])
 
   const hasIncidents = !!incidentCollection
 

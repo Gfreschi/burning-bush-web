@@ -4,47 +4,19 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import NewComplaintForm from '../Complaints/NewComplaintForm'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useSnackbar } from 'notistack'
-
+import { Incident } from '../../types/Incident'
+import { pulsingDot } from 'src/components/WorldMapBox/incident-icon'
 interface MapboxMapProps {
   initialOptions?: Omit<mapboxgl.MapboxOptions, 'container'>
+  incidentCollection?: Incident[] | unknown
   onCreated?(map: mapboxgl.Map): void
   onLoaded?(map: mapboxgl.Map): void
   onRemoved?(): void
 }
 
-type Incidents = {
-  id: number
-  title: string
-  severity: number
-  kind: number
-  details: string
-  latitude: number
-  longitude: number
-}
-
-const incidentColection = [
-  {
-    id: 1,
-    title: 'Incidente 1',
-    severity: 1,
-    kind: 1,
-    details: 'Detalhes do incidente 1',
-    latitude: -22.41,
-    longitude: -47.57,
-  },
-  {
-    id: 2,
-    title: 'Incidente 2',
-    severity: 2,
-    kind: 2,
-    details: 'Detalhes do incidente 2',
-    latitude: -22.42,
-    longitude: -47.57,
-  },
-]
-
 function MapboxMap({
   initialOptions = {},
+  incidentCollection,
   onCreated,
   onLoaded,
   onRemoved,
@@ -78,18 +50,21 @@ function MapboxMap({
       })
     }
 
-    const map = mapboxMap
-
     if (onCreated) onCreated(mapboxMap)
 
     if (onLoaded) mapboxMap.once('load', () => onLoaded(mapboxMap))
 
+    const map = mapboxMap
+
     map.on('load', () => {
+      // svg animation for incident icon
+      map.addImage('pulsing-dot', pulsingDot, { pixelRatio: 2 })
+
       map.addSource('incidents', {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
-          features: incidentColection.map(incident => ({
+          features: incidentCollection.map(incident => ({
             type: 'Feature',
             geometry: {
               type: 'Point',
@@ -111,8 +86,7 @@ function MapboxMap({
         type: 'symbol',
         source: 'incidents',
         layout: {
-          'icon-image': 'marker-15',
-          'icon-allow-overlap': true,
+          'icon-image': 'pulsing-dot',
         },
       })
 
@@ -139,12 +113,17 @@ function MapboxMap({
 
         // Populate the popup and set its coordinates
         // based on the feature found.
-        new mapboxgl.Popup()
+        let incidentPopup = new mapboxgl.Popup()
           .setLngLat(coordinates)
           .setHTML(
             `<h3>${title}</h3><p>Severity: ${severity}</p><p>Kind: ${kind}</p><p>Details: ${details}</p>`
           )
           .addTo(map)
+
+        map.on('mouseleave', 'incidents', () => {
+          map.getCanvas().style.cursor = ''
+          incidentPopup.remove()
+        })
       })
 
       // When the mouse leaves the places layer, update the feature state of the
@@ -210,7 +189,7 @@ function MapboxMap({
       setMap(undefined)
       if (onRemoved) onRemoved()
     }
-  }, [initialOptions, onCreated, onLoaded, onRemoved])
+  }, [initialOptions, incidentCollection, onCreated, onLoaded, onRemoved])
 
   function renderComplaintForm(coordinates: mapboxgl.LngLat) {
     return (
