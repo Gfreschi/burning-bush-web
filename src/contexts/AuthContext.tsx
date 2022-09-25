@@ -1,17 +1,15 @@
-import React, { createContext, useEffect, useState } from 'react'
+import {
+  createContext,
+  useEffect,
+  useState,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react'
 import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import Router from 'next/router'
-
+import { User } from 'src/types/DataTypes'
 import { api } from '../services/api'
-
-type User = {
-  id: number
-  name: string
-  email: string
-  role: string
-  createdAt: string
-  avatarUrl: string
-}
 
 type SignInData = {
   email: string
@@ -26,6 +24,7 @@ type SignUpData = {
 type AuthContextType = {
   isAuthenticated: boolean
   user: User
+  fetchUser?: () => Promise<void>
   signIn: (data: SignInData) => Promise<void>
   signUp: (data: SignUpData) => Promise<void>
   signOut: () => Promise<void>
@@ -33,37 +32,50 @@ type AuthContextType = {
 
 export const AuthContext = createContext({} as AuthContextType)
 
+// custom hook to use the auth context
+export const useAuthContext = () => {
+  const context = useContext(AuthContext)
+
+  if (context === undefined) {
+    throw new Error('useAuthContext must be used within a AuthProvider')
+  }
+  return context
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState<User | null>(null)
 
   const isAuthenticated = !!user
 
-  // toda vez que este componente for renderizado, vai executar
   useEffect(() => {
-    // verifica se existe um token no cookie e o renomeia para accessToken
-    const { 'bnb_access_token': accessToken } = parseCookies()
-
+    const { bnb_access_token: accessToken } = parseCookies()
+    // if there is a token, fetch the user
     if (accessToken) {
-      try {
-        api
-          .get('/api/v1/users/me', {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-          })
-          .then(response => {
-            // console.log('authenticated')
-            setUser(response.data)
-          })
-      } catch (error) {
-        return error.response
-      }
+      fetchUser(accessToken)
     }
   }, [])
 
+  // use callback to memoize the function and only call api if user changes
+  const fetchUser = useCallback(
+    async (accessToken: string) => {
+      try {
+        const response = await api.get('/api/v1/users/me', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        setUser(response.data)
+      } catch (error) {
+        alert(error.message)
+      }
+    },
+    [user]
+  )
+
   // chamada ao backend onde faz a authenticacao de um novo usuario e retorna suas credencias
   // hook para fazer o registro de um novo usuario
+  // critografar a senha do usuario
   async function signUp({ email, password }: SignUpData) {
     try {
       const response = await api.post(
@@ -88,12 +100,9 @@ export function AuthProvider({ children }) {
         api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`
 
         Router.push('/')
-
-        console.log(response)
       }
     } catch (error) {
-      console.log(error.response) // response error data
-      return error.response
+      alert(error.message)
     }
   }
 
@@ -122,44 +131,48 @@ export function AuthProvider({ children }) {
         })
 
         api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`
-
+        alert('Login realizado com sucesso!')
         Router.push('/')
-
-        console.log(response)
       }
-      return response
     } catch (error) {
-      console.log(error.response) // response error data
-      return error.response
+      alert(error.message)
     }
   }
 
   // chamada ao backend para fazer o logout
   async function signOut() {
     try {
-      const { 'bnb_access_token': accessToken } = parseCookies()
+      const { bnb_access_token: accessToken } = parseCookies()
 
-      const response = await api.post('/api/v1/oauth/revoke', {
-        token: accessToken,
-        client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
-        client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
-      })
-
-      destroyCookie(null, 'bnb_access_token')
-
-      Router.push('/')
-
-      console.log(response)
+      await api
+        .post('/api/v1/oauth/revoke', {
+          token: accessToken,
+          client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
+          client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
+        })
+        .then(() => {
+          destroyCookie(undefined, 'bnb_access_token')
+          setUser(null)
+          Router.push('/')
+        })
+        .catch(error => {
+          alert(error.message)
+        })
     } catch (error) {
-      console.log(error.response) // response error data
-      return error.response
+      alert(error.message)
     }
   }
 
+  const contextValue = useMemo(
+    () => ({
+      isAuthenticated,
+      user,
+    }),
+    [isAuthenticated, user]
+  )
+
   return (
-    <AuthContext.Provider
-      value={{ user, isAuthenticated, signIn, signUp, signOut }}
-    >
+    <AuthContext.Provider value={{ ...contextValue, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   )

@@ -13,7 +13,7 @@ export default function New() {
         <Button
           variant="contained"
           onClick={() => {
-            false
+            console.log(incidentCollection)
           }}
         >
           Get Incidents

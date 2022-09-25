@@ -1,9 +1,17 @@
-import * as React from 'react'
-import { Incident } from 'src/types/Incident'
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react'
+import { Incident } from 'src/types/DataTypes'
 import { api } from 'src/services/api'
 
 type IncidentsContextType = {
-  children?: React.ReactNode
+  children?: ReactNode
   initialOptions?: {
     userCoordinates?: [number, number]
   }
@@ -11,10 +19,10 @@ type IncidentsContextType = {
   hasIncidents: boolean
 }
 
-const IncidentsContext = React.createContext({} as IncidentsContextType)
+const IncidentsContext = createContext({} as IncidentsContextType)
 
 const useIncidentsContext = () => {
-  const context = React.useContext(IncidentsContext)
+  const context = useContext(IncidentsContext)
 
   if (context === undefined) {
     throw new Error(
@@ -30,19 +38,22 @@ function IncidentsProvider({
     userCoordinates: [-47.57, -22.41],
   },
 }: IncidentsContextType) {
-  const [incidentCollection, setIncidentCollection] = React.useState<
-    Incident[]
-  >([])
+  const [incidentCollection, setIncidentCollection] = useState<Incident[]>([])
+
+  const { userCoordinates } = initialOptions
 
   const hasIncidents = !!incidentCollection
 
-  React.useEffect(() => {
-    updateIncidents()
-  }, [])
-
-  const updateIncidents = React.useCallback(async () => {
+  // update the incident collection when the user coordinates change
+  useEffect(() => {
+    console.log(userCoordinates)
     getIncidents()
   }, [])
+
+  // use when the user coordinates change
+  // const updateIncidents = useCallback(async () => {
+  //   getIncidents()
+  // }, [])
 
   // passar localicação do usuário para o contexto buscas incidentes na area do usuario
   async function getIncidents() {
@@ -57,7 +68,7 @@ function IncidentsProvider({
   }
 
   // memoize the full context value
-  const contextValue = React.useMemo(
+  const contextValue = useMemo(
     () => ({
       incidentCollection,
       hasIncidents,

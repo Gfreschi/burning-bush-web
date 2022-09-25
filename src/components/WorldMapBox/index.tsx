@@ -2,9 +2,9 @@ import * as React from 'react'
 import mapboxgl, { Marker } from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import NewComplaintForm from '../Complaints/NewComplaintForm'
-import { AuthContext } from '../../contexts/AuthContext'
+import { useAuthContext } from '../../contexts/AuthContext'
 import { useSnackbar } from 'notistack'
-import { Incident } from '../../types/Incident'
+import { Incident } from '../../types/DataTypes'
 import { pulsingDot } from 'src/components/WorldMapBox/incident-icon'
 interface MapboxMapProps {
   initialOptions?: Omit<mapboxgl.MapboxOptions, 'container'>
@@ -21,7 +21,7 @@ function MapboxMap({
   onLoaded,
   onRemoved,
 }: MapboxMapProps) {
-  const { isAuthenticated } = React.useContext(AuthContext)
+  const { isAuthenticated } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar()
   const [map, setMap] = React.useState<mapboxgl.Map>()
   const [complaintCoordinates, setComplaintCoordinates] =
