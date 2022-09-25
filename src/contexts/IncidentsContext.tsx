@@ -46,7 +46,7 @@ function IncidentsProvider({
 
   // update the incident collection when the user coordinates change
   useEffect(() => {
-    console.log(userCoordinates)
+    // console.log(userCoordinates)
     getIncidents()
   }, [])
 
