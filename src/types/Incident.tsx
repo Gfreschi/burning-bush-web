@@ -4,8 +4,10 @@ export interface Incident {
   severity: number
   details: string
   kind: number
-  longitude: number
-  latitude: number
   createdAt: string
   updatedAt: string
+  location: {
+    longitude: number
+    latitude: number
+  }
 }

@@ -81,7 +81,7 @@ export default function NewComplaintForm(
         '/api/v1/complaints',
         JSON.stringify({
           details: data.details,
-          kind: data.kind,
+          kind: 1, // data.kind must be a number
           severity: data.severity,
           longitude: data.latitude,
           latitude: data.longitude,

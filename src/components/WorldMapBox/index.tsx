@@ -8,7 +8,7 @@ import { Incident } from '../../types/Incident'
 import { pulsingDot } from 'src/components/WorldMapBox/incident-icon'
 interface MapboxMapProps {
   initialOptions?: Omit<mapboxgl.MapboxOptions, 'container'>
-  incidentCollection?: Incident[] | unknown
+  incidentCollection?: Incident[]
   onCreated?(map: mapboxgl.Map): void
   onLoaded?(map: mapboxgl.Map): void
   onRemoved?(): void
@@ -68,7 +68,10 @@ function MapboxMap({
             type: 'Feature',
             geometry: {
               type: 'Point',
-              coordinates: [incident.longitude, incident.latitude],
+              coordinates: [
+                incident.location.latitude,
+                incident.location.longitude,
+              ],
             },
             properties: {
               title: incident.title,
@@ -113,7 +116,7 @@ function MapboxMap({
 
         // Populate the popup and set its coordinates
         // based on the feature found.
-        let incidentPopup = new mapboxgl.Popup()
+        const incidentPopup = new mapboxgl.Popup()
           .setLngLat(coordinates)
           .setHTML(
             `<h3>${title}</h3><p>Severity: ${severity}</p><p>Kind: ${kind}</p><p>Details: ${details}</p>`

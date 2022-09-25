@@ -35,7 +35,7 @@ export default function Preview() {
       <Layout title={'Map'}>
         <WorldMapBox
           initialOptions={{ center: [-47.57, -22.41] }}
-          incidentCollection={incidentColectionExample}
+          incidentCollection={incidentCollection}
           onLoaded={handleMapLoading}
         />
         {loading && <MapLoadingHolder className="loading-holder" />}
