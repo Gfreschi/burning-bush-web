@@ -15,8 +15,8 @@ type IncidentsContextType = {
   initialOptions?: {
     userCoordinates?: [number, number]
   }
-  incidentCollection: Incident[]
-  hasIncidents: boolean
+  incidentCollection?: Incident[]
+  hasIncidents?: boolean
 }
 
 const IncidentsContext = createContext({} as IncidentsContextType)

@@ -44,16 +44,16 @@ export const useAuthContext = () => {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState<User | null>(null)
-
   const isAuthenticated = !!user
 
+  const { bnb_access_token: accessToken } = parseCookies()
+
   useEffect(() => {
-    const { bnb_access_token: accessToken } = parseCookies()
     // if there is a token, fetch the user
     if (accessToken) {
       fetchUser(accessToken)
     }
-  }, [])
+  }, [accessToken])
 
   // use callback to memoize the function and only call api if user changes
   const fetchUser = useCallback(
@@ -70,7 +70,7 @@ export function AuthProvider({ children }) {
         alert(error.message)
       }
     },
-    [user]
+    [accessToken]
   )
 
   // chamada ao backend onde faz a authenticacao de um novo usuario e retorna suas credencias

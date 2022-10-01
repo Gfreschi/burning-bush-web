@@ -1,4 +1,4 @@
-import { getApiClient } from './axios'
+import { getAPIClient } from './axios'
 
 // utilizar apenas para chamadas vindas do browser
-export const api = getApiClient()
+export const api = getAPIClient()

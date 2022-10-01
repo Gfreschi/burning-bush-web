@@ -2,8 +2,8 @@ import axios from 'axios'
 import { parseCookies } from 'nookies'
 
 // precisa de um ctx vinda do servidor, por isso a distincao entre api e getApiClient
-export function getApiClient(ctx?: any) {
-  const { 'bnb_access_token': token } = parseCookies(ctx)
+export function getAPIClient(ctx?: unknown) {
+  const { bnb_access_token: token } = parseCookies(ctx)
 
   const api = axios.create({
     baseURL: 'http://localhost:3000',
