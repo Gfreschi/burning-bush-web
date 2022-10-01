@@ -14,7 +14,6 @@ import Typography from '@mui/material/Typography'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../../styles/theme'
 import { AuthContext } from '../../contexts/AuthContext'
-import ListErrors from '../common/ListErrors'
 
 function Copyright(props: any) {
   return (
