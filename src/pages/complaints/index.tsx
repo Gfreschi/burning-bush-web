@@ -29,6 +29,7 @@ export default function Index({ complaints }: ComplaintsProps) {
           >
             {complaints.map((complaint: { id: React.Key }) => (
               <Grid item key={complaint.id} xl={3} lg={5} md={4} sm={6} xs={12}>
+                <h1>{complaint.id}</h1>
                 <DefaultCard item={complaint} classes={undefined} />
               </Grid>
             ))}
