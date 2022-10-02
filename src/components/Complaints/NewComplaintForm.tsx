@@ -24,6 +24,7 @@ import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { api } from '../../services/api'
 import { useSnackbar } from 'notistack'
+import FileInput from './FileInput'
 
 enum kindEnum {
   fire = 1,
@@ -58,6 +59,21 @@ const validationSchema = Yup.object().shape({
   details: Yup.string(),
   kind: Yup.string().required('Kind is required'),
   severity: Yup.number().required('Severity is required'),
+  files: Yup.array()
+    .of(
+      Yup.mixed()
+        .test(
+          'fileSize',
+          'Arquivo muito grande',
+          value => value && value.size <= 2000000
+        )
+        .test(
+          'fileFormat',
+          'Formato de arquivo inválido',
+          value => value && ['image/jpeg', 'image/png'].includes(value.type)
+        )
+    )
+    .max(3, 'Only 3 pictures are allowed'),
 })
 
 export default function NewComplaintForm(
@@ -71,6 +87,8 @@ export default function NewComplaintForm(
     reset,
     formState: { isSubmitting },
   } = useForm<FormInput>(formOptions)
+
+  console.log(control._formValues)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -104,6 +122,7 @@ export default function NewComplaintForm(
 
   // handle prop as data for the form
   const onSubmit: SubmitHandler<FormInput> = async (formData: FormInput) => {
+    console.log(formData)
     const { details, kind, severity } = formData
 
     const { latitude, longitude } = props.complaintCoodinate
@@ -254,14 +273,13 @@ export default function NewComplaintForm(
                     />
                   </Grid>
                   <Grid item xs={12} sx={{ mb: 1 }}>
-                    <Button
-                      variant="contained"
-                      component="label"
-                      endIcon={<AddPhotoAlternateRoundedIcon />}
-                    >
-                      Insira fotos aqui...
-                      <input type="file" hidden />
-                    </Button>
+                    <FileInput
+                      accept="image/png, image/jpg, image/jpeg, image/pdf"
+                      control={control}
+                      multiple
+                      name="pictures"
+                      mode="append"
+                    />
                   </Grid>
                 </Grid>
                 <Button
