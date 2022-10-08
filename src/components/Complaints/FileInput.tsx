@@ -12,45 +12,45 @@ import {
   ListItemText,
   TextField,
 } from '@mui/material'
+
 import AddIcon from '@mui/icons-material/Add'
 import { useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 
 interface FileInputProps {
   name: string
   label: string
   mode: string
   accept: string
-  maxFiles: number
-  maxFileSize: number
+  maxFiles: 1
+  maxFileSize: 1000000
   value: File[]
-  onChange: (files: File[]) => void
-  register: ReturnType<typeof useForm>['register']
   control: ReturnType<typeof useForm>['control']
   error: string
 }
 
+{/* <FileInput
+accept="image/png, image/jpg, image/jpeg, image/pdf"
+control={control}
+multiple
+name="pictures"
+mode="append"
+/> */}
+
+
+// TODO: REFACTOR THIS COMPONENT AND USE IN THE CREATE COMPLAINT FORM
 export default function FileInput(props: FileInputProps) {
   const { name, label = name, mode = 'update' } = props
 
+  const { control } = props
+  const { register, unregister } = control
+
   const {
-    register,
-    unregister,
     setValue,
     watch,
     formState: { errors },
   } = useForm()
-
-  // const {
-  //   _formValues,
-  //   register,
-  //   unregister,
-  //   _getWatch: watch,
-  //   _formState: { errors },
-  // } = props.control
 
   const files = watch(name)
 
@@ -84,14 +84,13 @@ export default function FileInput(props: FileInputProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: props.accept,
+    maxFiles: props.maxFiles,
+    maxSize: props.maxFileSize,
   })
 
   useEffect(() => {
     register(name)
-    console.log(props.control._formValues)
-    return () => {
-      unregister(name)
-    }
+    return () => unregister(name)
   }, [register, unregister, name])
 
   return (
@@ -99,7 +98,7 @@ export default function FileInput(props: FileInputProps) {
     <>
       <Controller
         name={name}
-        control={props.control}
+        control={control}
         defaultValue={[]}
         render={({ field }) => (
           <FormControl fullWidth>
@@ -172,47 +171,3 @@ export default function FileInput(props: FileInputProps) {
     </>
   )
 }
-
-// return (
-//   <div style={{ padding: '100px' }}>
-//     <label
-//       className="block text-gray-700 text-sm font-bold mb-2 capitalize"
-//       htmlFor={name}
-//     >
-//       {label}
-//     </label>
-
-//     <div {...getRootProps()}>
-//       <input
-//         {...props}
-//         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//         id={name}
-//         {...getInputProps()}
-//       />
-
-//       <div
-//         className={
-//           'w-full p-2 border border-dashed border-gray-900 ' +
-//           (isDragActive ? 'bg-gray-400' : 'bg-gray-200')
-//         }
-//       >
-//         <p className="text-center my-2">Drop the files here ...</p>
-//         {!!files?.length && (
-//           <div className="grid gap-1 grid-cols-4 mt-2">
-//             {files.map(file => {
-//               return (
-//                 <div key={file.name}>
-//                   <img
-//                     src={URL.createObjectURL(file)}
-//                     alt={file.name}
-//                     style={{ width: '100px', height: '100px' }}
-//                   />
-//                 </div>
-//               )
-//             })}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   </div>
-// )

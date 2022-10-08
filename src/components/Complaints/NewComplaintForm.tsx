@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import FormControl from '@mui/material/FormControl'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -15,7 +15,6 @@ import Paper from '@mui/material/Paper'
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
 import CircularProgress from '@mui/material/CircularProgress'
 import SendIcon from '@mui/icons-material/Send'
-import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../../styles/theme'
 // importation for the useForm hook
@@ -24,7 +23,8 @@ import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { api } from '../../services/api'
 import { useSnackbar } from 'notistack'
-import FileInput from './FileInput'
+import { Input } from '@mui/material'
+import { Complaint } from 'src/types/DataTypes'
 
 enum kindEnum {
   fire = 1,
@@ -37,15 +37,9 @@ interface FormInput {
   details: string
   kind: kindEnum
   severity: number
+  files?: File[]
 }
 
-interface Complaint {
-  details: string
-  severity: number
-  kind: number
-  longitude: number
-  latitude: number
-}
 interface ComplaintFormProps {
   complaintCoodinate: {
     latitude: number
@@ -59,21 +53,23 @@ const validationSchema = Yup.object().shape({
   details: Yup.string(),
   kind: Yup.string().required('Kind is required'),
   severity: Yup.number().required('Severity is required'),
-  files: Yup.array()
-    .of(
-      Yup.mixed()
-        .test(
-          'fileSize',
-          'Arquivo muito grande',
-          value => value && value.size <= 2000000
-        )
-        .test(
-          'fileFormat',
-          'Formato de arquivo inválido',
-          value => value && ['image/jpeg', 'image/png'].includes(value.type)
-        )
-    )
-    .max(3, 'Only 3 pictures are allowed'),
+  // files: Yup.array()
+  //   .of(
+  //     Yup.mixed()
+  //       .test(
+  //         'fileSize',
+  //         'Arquivo muito grande',
+  //         value => value && value.size <= 2000000
+  //       )
+  //       .test(
+  //         'fileFormat',
+  //         'Formato de arquivo inválido',
+  //         value =>
+  //           value &&
+  //           ['image/jpeg', 'image/jpg', 'image/png'].includes(value.type)
+  //       )
+  //   )
+  //   .max(3, 'Only 3 pictures are allowed'),
 })
 
 export default function NewComplaintForm(
@@ -87,8 +83,6 @@ export default function NewComplaintForm(
     reset,
     formState: { isSubmitting },
   } = useForm<FormInput>(formOptions)
-
-  console.log(control._formValues)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -272,16 +266,20 @@ export default function NewComplaintForm(
                       )}
                     />
                   </Grid>
+                  {/* Input Image -> TODO: use react dropzone and refactor fileInput component */}
                   <Grid item xs={12} sx={{ mb: 1 }}>
-                    <FileInput
-                      accept="image/png, image/jpg, image/jpeg, image/pdf"
+                    <Controller
+                      name={'files'}
                       control={control}
-                      multiple
-                      name="pictures"
-                      mode="append"
+                      render={({ field: { onChange }, formState }) => (
+                        <>
+                          <Input type="file" onChange={onChange} />
+                        </>
+                      )}
                     />
                   </Grid>
                 </Grid>
+                {/* Send Button */}
                 <Button
                   type="submit"
                   fullWidth
