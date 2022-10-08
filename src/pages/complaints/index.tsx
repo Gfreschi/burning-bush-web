@@ -4,7 +4,7 @@ import { Complaint } from 'src/types/DataTypes'
 import ErrorPage from 'next/error'
 import { parseCookies } from 'nookies'
 import { Box, Grid } from '@mui/material'
-import DefaultCard from 'src/components/DefaultCard'
+import ComplaintCard from 'src/components/Complaints/ComplaintCard'
 import { getAPIClient } from 'src/services/axios'
 
 interface ComplaintsProps {
@@ -20,20 +20,23 @@ export default function Index({ complaints }: ComplaintsProps) {
     <>
       <Layout title="Home">
         <Box p={2}>
-          <Grid
-            container
-            spacing={4}
-            direction="row"
-            justifyContent="center"
-            alignItems="flex-start"
-          >
-            {complaints.map((complaint: { id: React.Key }) => (
-              <Grid item key={complaint.id} xl={3} lg={5} md={4} sm={6} xs={12}>
-                <h1>{complaint.id}</h1>
-                <DefaultCard item={complaint} classes={undefined} />
-              </Grid>
-            ))}
-          </Grid>
+          {complaints.map(complaint => (
+            <Box
+              key={complaint.id}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100%',
+                p: 20,
+                border: '1px solid #eaeaea',
+              }}
+            >
+              <ComplaintCard complaint={complaint} />
+            </Box>
+          ))}
         </Box>
       </Layout>
     </>

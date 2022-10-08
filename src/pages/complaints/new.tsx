@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { api } from 'src/services/api'
 import DefaultCard from 'src/components/DefaultCard'
 import { Complaint } from 'src/types/DataTypes'
+import ComplaintCard from 'src/components/Complaints/ComplaintCard'
 
 export default function New() {
   // custom hook
@@ -24,17 +25,16 @@ export default function New() {
       .catch(error => console.error(error))
   }, [])
 
-  const complaintSample: Complaint = {
+  const complaintSample = {
     id: 1,
-    details: 'Complaint 1',
-    severity: 10,
-    kind: 1,
+    details: 'DETALHES DA COMPLAINT',
+    severity: 5,
+    kind: 'QUEIMADA',
     latitude: 1,
     longitude: 1,
+    image: 'https://picsum.photos/200/300',
+    createdAt: '2021-10-10T00:00:00.000Z',
   }
-
-  console.log(data)
-  console.log(complaintSample)
 
   return (
     <>
@@ -65,6 +65,10 @@ export default function New() {
           <h2>{data?.longitude}</h2>
           <img src={data?.image.url} alt="image" />
         </div>
+
+        {/* <div>
+          <ComplaintCard complaint={data} />
+        </div> */}
 
         {hasIncidents ? (
           <h1>Number of incidents: {incidentCollection.length}</h1>

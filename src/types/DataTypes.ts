@@ -9,6 +9,12 @@ export interface User {
   readonly updatedAt: string
 }
 
+export interface Image {
+  byteSize: number
+  url: string
+  name: string
+}
+
 export interface Complaint {
   readonly id?: number
   readonly userId?: number
@@ -18,7 +24,7 @@ export interface Complaint {
   incidentId?: number
   latitude: number
   longitude: number
-  image?: FileList
+  image?: Image
   readonly createdAt?: string
   readonly updatedAt?: string
 }
