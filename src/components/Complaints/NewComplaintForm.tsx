@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import FormControl from '@mui/material/FormControl'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -13,12 +13,18 @@ import Typography from '@mui/material/Typography'
 import Rating from '@mui/material/Rating'
 import Paper from '@mui/material/Paper'
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
+import ImageIcon from '@mui/icons-material/Image'
 import CircularProgress from '@mui/material/CircularProgress'
 import SendIcon from '@mui/icons-material/Send'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../../styles/theme'
 // importation for the useForm hook
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
+import {
+  useForm,
+  SubmitHandler,
+  Controller,
+  useController,
+} from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { api } from '../../services/api'
@@ -27,17 +33,17 @@ import { Input } from '@mui/material'
 import { Complaint } from 'src/types/DataTypes'
 
 enum kindEnum {
-  fire = 1,
-  trash = 2,
-  flood = 3,
-  other = 4,
+  fire = 0,
+  trash = 1,
+  flood = 2,
+  other = 3,
 }
 
 interface FormInput {
   details: string
   kind: kindEnum
   severity: number
-  files?: File[]
+  image: FileList
 }
 
 interface ComplaintFormProps {
@@ -72,6 +78,21 @@ const validationSchema = Yup.object().shape({
   //   .max(3, 'Only 3 pictures are allowed'),
 })
 
+const FileInput = ({ control, name }) => {
+  const { field } = useController({ control, name })
+  const [value, setValue] = useState('')
+  return (
+    <input
+      type="file"
+      value={value}
+      onChange={e => {
+        setValue(e.target.value)
+        field.onChange(e.target.files)
+      }}
+    />
+  )
+}
+
 export default function NewComplaintForm(
   props: ComplaintFormProps
 ): JSX.Element {
@@ -87,67 +108,44 @@ export default function NewComplaintForm(
   const { enqueueSnackbar } = useSnackbar()
 
   // function to call api
-  async function createComplaint(data: Complaint) {
+  async function createComplaint(complaintResquestData) {
     try {
-      const response = await api.post(
-        '/api/v1/complaints',
-        JSON.stringify({
-          details: data.details,
-          kind: 1, // data.kind must be a number
-          severity: data.severity,
-          longitude: data.latitude,
-          latitude: data.longitude,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      if (response?.status === 201) {
-        return response.data
-      } else {
-        return null
-      }
+      await api.post('/api/v1/complaints', complaintResquestData).then(res => {
+        res.data.json()
+        reset()
+        setShow(false)
+        enqueueSnackbar('Complaint created successfully', {
+          variant: 'success',
+        })
+      })
     } catch (error) {
-      return null
+      enqueueSnackbar('Error creating complaint', {
+        variant: 'error',
+      })
     }
   }
 
   // handle prop as data for the form
   const onSubmit: SubmitHandler<FormInput> = async (formData: FormInput) => {
-    console.log(formData)
-    const { details, kind, severity } = formData
+    const { details, kind, severity, image } = formData
 
     const { latitude, longitude } = props.complaintCoodinate
 
-    const complaintResquestData: Complaint = {
-      details: details,
-      kind: kind,
-      severity: severity,
-      longitude: longitude,
-      latitude: latitude,
-    }
+    const complaintResquestData = new FormData()
+
+    // Form data to send to the api
+    complaintResquestData.append('complaint[details]', details)
+    complaintResquestData.append('complaint[kind]', Number(kind.toString()))
+    complaintResquestData.append('complaint[severity]', severity.toString())
+    complaintResquestData.append('complaint[longitude]', longitude.toString())
+    complaintResquestData.append('complaint[latitude]', latitude.toString())
+    complaintResquestData.append('complaint[image]', image[0])
 
     console.log(complaintResquestData)
-
-    const response = await createComplaint(complaintResquestData)
-    if (response) {
-      enqueueSnackbar('Queixa criada com sucesso!', {
-        variant: 'success',
-        autoHideDuration: 2000,
-      })
-      reset()
-      setShow(false)
-    } else {
-      enqueueSnackbar('Erro ao criar queixa', {
-        variant: 'error',
-        autoHideDuration: 3000,
-      })
-    }
+    createComplaint(complaintResquestData)
   }
 
-  return show ? (
+  return true ? (
     <>
       <ThemeProvider theme={theme}>
         <Container
@@ -249,17 +247,17 @@ export default function NewComplaintForm(
                             <Select
                               labelId="kind"
                               id="kind"
-                              value={value ?? ''}
+                              value={value ?? 0}
                               label="Tipo"
                               onChange={onChange}
                               autoWidth
                               required
                               error={!!formState.errors.kind}
                             >
-                              <MenuItem value={1}>Queimada</MenuItem>
-                              <MenuItem value={2}>Lixo</MenuItem>
-                              <MenuItem value={3}>Alagamento</MenuItem>
-                              <MenuItem value={4}>Outro</MenuItem>
+                              <MenuItem value={0}>Queimada</MenuItem>
+                              <MenuItem value={1}>Lixo</MenuItem>
+                              <MenuItem value={2}>Alagamento</MenuItem>
+                              <MenuItem value={3}>Outro</MenuItem>
                             </Select>
                           </FormControl>
                         </>
@@ -268,15 +266,7 @@ export default function NewComplaintForm(
                   </Grid>
                   {/* Input Image -> TODO: use react dropzone and refactor fileInput component */}
                   <Grid item xs={12} sx={{ mb: 1 }}>
-                    <Controller
-                      name={'files'}
-                      control={control}
-                      render={({ field: { onChange }, formState }) => (
-                        <>
-                          <Input type="file" onChange={onChange} />
-                        </>
-                      )}
-                    />
+                    <FileInput name="image" control={control} />
                   </Grid>
                 </Grid>
                 {/* Send Button */}

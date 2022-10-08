@@ -18,6 +18,7 @@ export interface Complaint {
   incidentId?: number
   latitude: number
   longitude: number
+  image?: FileList
   readonly createdAt?: string
   readonly updatedAt?: string
 }
