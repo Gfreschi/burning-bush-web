@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Head from 'next/head'
 import TopBar from './TopBar'
 import NavBar from './NavBar'
+import { useAuthContext } from 'src/contexts/AuthContext'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,6 +36,7 @@ const useStyles = makeStyles(theme => ({
 
 function Layout({ children, title }) {
   const classes = useStyles()
+  const { isAuthenticated, user } = useAuthContext()
 
   return (
     <div>
@@ -42,8 +44,8 @@ function Layout({ children, title }) {
         <title>{title}</title>
       </Head>
       <div className={classes.root}>
-        <TopBar />
-        <NavBar />
+        <TopBar user={user} />
+        <NavBar isAuthenticated={isAuthenticated} user={user} />
         <div className={classes.wrapper}>
           <div className={classes.contentContainer}>
             <div className={classes.content}>{children}</div>

@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { AuthContext } from '../../contexts/AuthContext'
+import { useAuthContext } from 'src/contexts/AuthContext'
 
 function Copyright(props: any) {
   return (
@@ -33,7 +33,7 @@ function Copyright(props: any) {
 const theme = createTheme()
 
 export default function SignUp() {
-  const { signUp } = React.useContext(AuthContext)
+  const { signUp } = useAuthContext()
 
   const [isLoading, setIsLoading] = React.useState(false)
 

@@ -74,6 +74,18 @@ export function AuthProvider({ children }) {
     })
   }
 
+  const errorSignOut = () => {
+    enqueueSnackbar('Erro ao fazer logout', {
+      variant: 'error',
+    })
+  }
+
+  const sucessSignOut = () => {
+    enqueueSnackbar('Logout realizado com sucesso', {
+      variant: 'success',
+    })
+  }
+
   const otherError = () => {
     enqueueSnackbar('Erro desconhecido', {
       variant: 'error',
@@ -99,7 +111,7 @@ export function AuthProvider({ children }) {
         })
         setUser(response.data)
       } catch (error) {
-        alert(error.message)
+        otherError()
       }
     },
     [accessToken]
@@ -176,22 +188,20 @@ export function AuthProvider({ children }) {
     try {
       const { bnb_access_token: accessToken } = parseCookies()
 
-      await api
-        .post('/api/v1/oauth/revoke', {
-          token: accessToken,
-          client_secret: 'BCb-ygdynnqzU1uOF5z38ivz-hfQYvpDxXmgdRH4H5Q',
-          client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
-        })
-        .then(() => {
-          destroyCookie(undefined, 'bnb_access_token')
-          setUser(null)
-          Router.push('/')
-        })
-        .catch(error => {
-          alert(error.message)
-        })
+      const response = await api.post('/api/v1/oauth/revoke', {
+        token: accessToken,
+        client_secret: 'BCb-ygdynnqzU1uOF5z38ivz-hfQYvpDxXmgdRH4H5Q',
+        client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
+      })
+
+      if (response?.status === 200) {
+        destroyCookie(undefined, 'bnb_access_token')
+        setUser(null)
+        // sucessSignOut()
+        Router.push('/')
+      }
     } catch (error) {
-      alert(error.message)
+      errorSignOut()
     }
   }
 

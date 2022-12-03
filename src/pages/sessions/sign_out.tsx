@@ -1,17 +1,10 @@
-import React from 'react'
-
-import { AuthContext } from '../../contexts/AuthContext'
+import { useAuthContext } from 'src/contexts/AuthContext'
 
 export default function SignOut() {
-  const { signOut } = React.useContext(AuthContext)
-
-  // TODO: refactor this
+  const { signOut } = useAuthContext()
   try {
     signOut()
-    alert('Signed out')
   } catch (error) {
     console.log(error)
   }
-
-  return <></>
 }

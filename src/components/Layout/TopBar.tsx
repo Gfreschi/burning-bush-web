@@ -13,6 +13,8 @@ import Hidden from '@mui/material/Hidden'
 import Badge from '@material-ui/core/Badge'
 import { useRouter } from 'next/router'
 import { Typography } from '@material-ui/core'
+import { User } from 'src/types/DataTypes'
+import { Avatar } from '@mui/material'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,9 +49,8 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-function TopBar() {
+function TopBar({ user }: { user: User }) {
   const classes = useStyles()
-
   const router = useRouter()
 
   return (
@@ -69,28 +70,31 @@ function TopBar() {
           </Hidden>
         </Box>
 
-        <Box display="flex">
-          <IconButton
-            size="large"
-            aria-label="show new notifications"
-            color="inherit"
-            className={classes.icons}
-          >
-            <Badge badgeContent={1} color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+        {user ? (
+          <Box display="flex" alignItems="center">
+            {/* <Typography variant="h6" color="textPrimary">
+              {user.name}
+            </Typography> */}
 
-          <Button
-            color="secondary"
-            component="a"
-            variant="outlined"
-            startIcon={<AccountCircle />}
-            onClick={() => router.push('/sessions/sign_in')}
-          >
-            Fazer Login
-          </Button>
-        </Box>
+            <Avatar
+              alt={user.email}
+              src={user.avatar}
+              sx={{ width: 32, height: 32, marginLeft: 1 }}
+            />
+          </Box>
+        ) : (
+          <Box display="flex" alignItems="center">
+            <Button
+              color="secondary"
+              component="a"
+              variant="outlined"
+              startIcon={<AccountCircle />}
+              onClick={() => router.push('/sessions/sign_in')}
+            >
+              Login
+            </Button>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   )

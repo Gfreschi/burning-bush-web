@@ -13,7 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../../styles/theme'
-import { AuthContext } from '../../contexts/AuthContext'
+import { useAuthContext } from 'src/contexts/AuthContext'
 
 function Copyright(props: any) {
   return (
@@ -34,7 +34,7 @@ function Copyright(props: any) {
 }
 
 export default function SignInForm() {
-  const { signIn } = React.useContext(AuthContext)
+  const { signIn } = useAuthContext()
 
   const [isLoading, setIsLoading] = React.useState(false)
   const [errors, setErrors] = React.useState([])

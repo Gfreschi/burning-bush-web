@@ -9,7 +9,7 @@ import DefaultCard from 'src/components/DefaultCard'
 import { Complaint } from 'src/types/DataTypes'
 import ComplaintCard from 'src/components/Complaints/ComplaintCard'
 import { GoogleLogin, GoogleLogout } from 'react-google-login'
-import { gapi } from 'gapi-script'
+
 
 export default function New() {
   // custom hook
