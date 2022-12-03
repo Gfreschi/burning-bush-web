@@ -63,7 +63,7 @@ function IncidentsProvider({
         setIncidentCollection(response.data)
       })
     } catch (error) {
-      alert('Erro ao buscar incidentes')
+      console.log('Erro ao buscar incidentes')
     }
   }
 

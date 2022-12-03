@@ -60,6 +60,7 @@ function MapboxMap({
       // svg animation for incident icon
       map.addImage('pulsing-dot', pulsingDot, { pixelRatio: 2 })
 
+      console.log(incidentCollection)
       map.addSource('incidents', {
         type: 'geojson',
         data: {
@@ -69,12 +70,13 @@ function MapboxMap({
             geometry: {
               type: 'Point',
               coordinates: [
-                incident.location.latitude,
                 incident.location.longitude,
+                incident.location.latitude,
               ],
             },
             properties: {
               title: incident.title,
+              street: incident.location.street,
               severity: incident.severity,
               kind: incident.kind,
               details: incident.details,
@@ -103,6 +105,7 @@ function MapboxMap({
 
         const coordinates = e.features[0].geometry.coordinates.slice()
         const title = e.features[0].properties.title
+        const street = e.features[0].properties.street
         const severity = e.features[0].properties.severity
         const kind = e.features[0].properties.kind
         const details = e.features[0].properties.details
@@ -119,7 +122,7 @@ function MapboxMap({
         const incidentPopup = new mapboxgl.Popup()
           .setLngLat(coordinates)
           .setHTML(
-            `<h3>${title}</h3><p>Severity: ${severity}</p><p>Kind: ${kind}</p><p>Details: ${details}</p>`
+            `<h3>${street}</h3><p>Severity: ${severity}</p><p>Kind: ${kind}</p><p>Details: ${details}</p>`
           )
           .addTo(map)
 

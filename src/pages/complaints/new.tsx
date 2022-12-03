@@ -8,6 +8,8 @@ import { api } from 'src/services/api'
 import DefaultCard from 'src/components/DefaultCard'
 import { Complaint } from 'src/types/DataTypes'
 import ComplaintCard from 'src/components/Complaints/ComplaintCard'
+import { GoogleLogin, GoogleLogout } from 'react-google-login'
+import { gapi } from 'gapi-script'
 
 export default function New() {
   // custom hook
@@ -15,15 +17,10 @@ export default function New() {
   const { isAuthenticated, user } = useAuthContext()
 
   const [data, setData] = React.useState<Complaint>(null)
+  const [profile, setProfile] = React.useState(null)
 
-  React.useEffect(() => {
-    api
-      .get('api/v1/web/latest')
-      .then(response => {
-        setData(response.data)
-      })
-      .catch(error => console.error(error))
-  }, [])
+  const clientId =
+    '218627128744-rk3bivfqtrpnnf1fkl8c96llvid42d7h.apps.googleusercontent.com'
 
   const complaintSample = {
     id: 1,
@@ -34,6 +31,28 @@ export default function New() {
     longitude: 1,
     image: 'https://picsum.photos/200/300',
     createdAt: '2021-10-10T00:00:00.000Z',
+  }
+
+  React.useEffect(() => {
+    const initClient = async () => {
+      await gapi.client.init({
+        clientId: clientId,
+        scope: '',
+      })
+    }
+    gapi.load('client:auth2', initClient)
+  }, [])
+
+  const onSuccess = res => {
+    setProfile(res.profileObj)
+  }
+
+  const onFailure = err => {
+    console.log('failed', err)
+  }
+
+  const logOut = () => {
+    setProfile(null)
   }
 
   return (
@@ -66,9 +85,37 @@ export default function New() {
           <img src={data?.image.url} alt="image" />
         </div>
 
-        {/* <div>
-          <ComplaintCard complaint={data} />
-        </div> */}
+        <div>
+          <script
+            src="https://apis.google.com/js/platform.js?onload=init"
+            async
+            defer
+          ></script>
+          {profile ? (
+            <div>
+              <img src={profile.imageUrl} alt="user image" />
+              <h3>User Logged in</h3>
+              <p>Name: {profile.name}</p>
+              <p>Email Address: {profile.email}</p>
+              <br />
+              <br />
+              <GoogleLogout
+                clientId={clientId}
+                buttonText="Log out"
+                onLogoutSuccess={logOut}
+              />
+            </div>
+          ) : (
+            <GoogleLogin
+              clientId={clientId}
+              buttonText="Sign in with Google"
+              onSuccess={onSuccess}
+              onFailure={onFailure}
+              cookiePolicy={'single_host_origin'}
+              isSignedIn={true}
+            />
+          )}
+        </div>
 
         {hasIncidents ? (
           <h1>Number of incidents: {incidentCollection.length}</h1>

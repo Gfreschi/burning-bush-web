@@ -56,16 +56,16 @@ const primaryMenu = [
   },
   {
     id: 2,
-    label: 'Queixa',
+    label: 'Queixas',
     path: '/complaints/new',
     icon: AddLocationAltIcon,
   },
-  {
-    id: 3,
-    label: 'Listar Incidentes',
-    path: '/incidents',
-    icon: ListAltIcon,
-  },
+  // {
+  //   id: 3,
+  //   label: 'Listar Incidentes',
+  //   path: '/incidents',
+  //   icon: ListAltIcon,
+  // },
 ]
 
 const secondaryMenu = [
@@ -115,7 +115,7 @@ function NavBar() {
 
       <Divider />
 
-      <List>
+      {/* <List>
         {secondaryMenu.map(item => {
           const Icon = item.icon
           return (
@@ -140,7 +140,7 @@ function NavBar() {
         })}
       </List>
 
-      <Divider />
+      <Divider /> */}
 
       <Box mx={4} my={2}>
         <Typography variant="body2">
@@ -151,7 +151,7 @@ function NavBar() {
             variant="outlined"
             color="secondary"
             startIcon={<AccountCircle />}
-            onClick={() => router.push('sessions/sign_in')}
+            onClick={() => router.push('/sessions/sign_in')}
           >
             Fazer login
           </Button>

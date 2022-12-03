@@ -50,11 +50,7 @@ export default function SignInForm() {
 
     try {
       const response = await signIn(payload)
-      if (response?.status !== 200) {
-        alert(response.data.error)
-      }
     } catch (error) {
-      console.log(error)
     } finally {
       setIsLoading(false)
     }
