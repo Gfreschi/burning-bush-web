@@ -8,6 +8,12 @@ export default function Preview() {
   const { incidentCollection } = useIncidentsContext()
   const [loading, setLoading] = useState(true)
   const handleMapLoading = () => setLoading(false)
+  const handleUserCoordinate = () => {
+    useIncidentsContext().setUserCoordinates({
+      latitude: -22.41,
+      longitude: -47.57,
+    })
+  }
 
   return (
     <div className="container">
@@ -16,6 +22,7 @@ export default function Preview() {
           initialOptions={{ center: [-47.57, -22.41] }}
           incidentCollection={incidentCollection}
           onLoaded={handleMapLoading}
+          onUserCoordinate={handleUserCoordinate}
         />
         {loading && <MapLoadingHolder className="loading-holder" />}
       </Layout>

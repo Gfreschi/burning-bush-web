@@ -6,14 +6,22 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
 } from 'react'
-import { Incident } from 'src/types/DataTypes'
+import { Incident, User } from 'src/types/DataTypes'
 import { api } from 'src/services/api'
+import { usePrevious } from 'src/hooks/usePrevious'
+import { useSnackbar } from 'notistack'
+
+type UserCoordinates = {
+  latitude: number
+  longitude: number
+}
 
 type IncidentsContextType = {
   children?: ReactNode
   initialOptions?: {
-    userCoordinates?: [number, number]
+    userCoordinates?: UserCoordinates
   }
   incidentCollection?: Incident[]
   hasIncidents?: boolean
@@ -35,37 +43,67 @@ const useIncidentsContext = () => {
 function IncidentsProvider({
   children,
   initialOptions = {
-    userCoordinates: [-47.57, -22.41],
+    userCoordinates: { latitude: -22.41, longitude: -47.57 },
   },
 }: IncidentsContextType) {
   const [incidentCollection, setIncidentCollection] = useState<Incident[]>([])
 
-  const { userCoordinates } = initialOptions
+  const [userCoordinates, setUserCoordinates] = useState<UserCoordinates>(
+    initialOptions.userCoordinates
+  )
+  const prevUserCoordinates = usePrevious(userCoordinates)
+
+  console.log('userCoordinates', userCoordinates)
+  console.log('prevUserCoordinates', prevUserCoordinates)
+  const { enqueueSnackbar } = useSnackbar()
 
   const hasIncidents = !!incidentCollection
 
-  // update the incident collection when the user coordinates change
-  useEffect(() => {
-    // console.log(userCoordinates)
-    getIncidents()
-  }, [])
+  const errorAlert = () => {
+    enqueueSnackbar('Erro ao carregar os incidentes', {
+      variant: 'error',
+    })
+  }
 
-  // use when the user coordinates change
-  // const updateIncidents = useCallback(async () => {
-  //   getIncidents()
-  // }, [])
+  const shouldSendRequest = useMemo(() => {
+    if (!prevUserCoordinates) return true
+    // analyse if previus user coordinates are 5% different from the current user coordinates
+    const isLatitudeDifferent = Math.abs(
+      prevUserCoordinates?.latitude - userCoordinates?.latitude
+    )
+    const isLongitudeDifferent = Math.abs(
+      prevUserCoordinates?.longitude - userCoordinates?.longitude
+    )
+    if (isLatitudeDifferent > 0.1 || isLongitudeDifferent > 0.1) {
+      return true
+    }
+    return false
+  }, [prevUserCoordinates, userCoordinates])
 
   // passar localicação do usuário para o contexto buscas incidentes na area do usuario
-  async function getIncidents() {
+  const getIncidents = useCallback(async (userCoordinates: UserCoordinates) => {
     try {
-      // create a api call to get the incidents
-      await api.get('/api/v1/web/incidents').then(response => {
-        setIncidentCollection(response.data)
+      const { data } = await api.get('/api/v1/web/near_by', {
+        params: {
+          latitude: userCoordinates?.latitude,
+          longitude: userCoordinates?.longitude,
+        },
       })
+
+      if (data) {
+        setIncidentCollection(data)
+      }
     } catch (error) {
-      console.log('Erro ao buscar incidentes')
+      errorAlert()
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (shouldSendRequest) {
+      console.log('shouldSendRequest', shouldSendRequest)
+      getIncidents(userCoordinates)
+    }
+  }, [shouldSendRequest])
 
   // memoize the full context value
   const contextValue = useMemo(

@@ -10,7 +10,6 @@ import { Complaint } from 'src/types/DataTypes'
 import ComplaintCard from 'src/components/Complaints/ComplaintCard'
 import { GoogleLogin, GoogleLogout } from 'react-google-login'
 
-
 export default function New() {
   // custom hook
   const { incidentCollection, hasIncidents } = useIncidentsContext()
@@ -33,15 +32,15 @@ export default function New() {
     createdAt: '2021-10-10T00:00:00.000Z',
   }
 
-  React.useEffect(() => {
-    const initClient = async () => {
-      await gapi.client.init({
-        clientId: clientId,
-        scope: '',
-      })
-    }
-    gapi.load('client:auth2', initClient)
-  }, [])
+  // React.useEffect(() => {
+  //   const initClient = async () => {
+  //     await gapi.client.init({
+  //       clientId: clientId,
+  //       scope: '',
+  //     })
+  //   }
+  //   // gapi.load('client:auth2', initClient)
+  // }, [])
 
   const onSuccess = res => {
     setProfile(res.profileObj)

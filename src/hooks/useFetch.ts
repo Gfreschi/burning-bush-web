@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { api } from '../services/api'
+import { api } from 'src/services/api'
 
 export function useFetch<Data = any>(url: string) {
   const { data, error } = useSWR<Data>(

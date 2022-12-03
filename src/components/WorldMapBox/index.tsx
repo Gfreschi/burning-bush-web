@@ -27,6 +27,9 @@ function MapboxMap({
   const [complaintCoordinates, setComplaintCoordinates] =
     React.useState<mapboxgl.LngLat>(null)
 
+  const [userCoordinates, setUserCoordinates] =
+    React.useState<mapboxgl.LngLat>(null)
+
   const mapNode = React.useRef(null)
 
   React.useEffect(() => {
@@ -56,11 +59,31 @@ function MapboxMap({
 
     const map = mapboxMap
 
+    const setUserLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const { latitude, longitude } = position.coords
+            setUserCoordinates(new mapboxgl.LngLat(longitude, latitude))
+
+            map.flyTo({
+              center: [longitude, latitude],
+              zoom: 13,
+            })
+          },
+          error => {
+            console.log(error)
+          }
+        )
+      }
+    }
+
     map.on('load', () => {
+      setUserLocation()
+
       // svg animation for incident icon
       map.addImage('pulsing-dot', pulsingDot, { pixelRatio: 2 })
 
-      console.log(incidentCollection)
       map.addSource('incidents', {
         type: 'geojson',
         data: {
@@ -96,6 +119,16 @@ function MapboxMap({
       })
 
       map.addControl(new mapboxgl.NavigationControl())
+
+      map.addControl(
+        new mapboxgl.GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          // When active the map will receive updates to the device's location as it changes.
+          trackUserLocation: true,
+        })
+      )
 
       // when a hover event occurs on a feature in the places layer, open a popup at the
       // location of the feature, with description HTML from its properties.
