@@ -3,6 +3,7 @@ import mapboxgl, { Marker } from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import NewComplaintForm from '../Complaints/NewComplaintForm'
 import { useAuthContext } from '../../contexts/AuthContext'
+import { useIncidentsContext } from 'src/contexts/IncidentsContext'
 import { useSnackbar } from 'notistack'
 import { Incident } from '../../types/DataTypes'
 import { pulsingDot } from 'src/components/WorldMapBox/incident-icon'
@@ -22,12 +23,10 @@ function MapboxMap({
   onRemoved,
 }: MapboxMapProps) {
   const { isAuthenticated } = useAuthContext()
+  // const { } = useIncidentsContext()
   const { enqueueSnackbar } = useSnackbar()
   const [map, setMap] = React.useState<mapboxgl.Map>()
   const [complaintCoordinates, setComplaintCoordinates] =
-    React.useState<mapboxgl.LngLat>(null)
-
-  const [userCoordinates, setUserCoordinates] =
     React.useState<mapboxgl.LngLat>(null)
 
   const mapNode = React.useRef(null)
@@ -59,29 +58,7 @@ function MapboxMap({
 
     const map = mapboxMap
 
-    const setUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const { latitude, longitude } = position.coords
-            setUserCoordinates(new mapboxgl.LngLat(longitude, latitude))
-
-            map.flyTo({
-              center: [longitude, latitude],
-              zoom: 13,
-            })
-          },
-          error => {
-            console.log(error)
-          }
-        )
-      }
-    }
-
     map.on('load', () => {
-      setUserLocation()
-
-      // svg animation for incident icon
       map.addImage('pulsing-dot', pulsingDot, { pixelRatio: 2 })
 
       map.addSource('incidents', {
@@ -125,8 +102,19 @@ function MapboxMap({
           positionOptions: {
             enableHighAccuracy: true,
           },
-          // When active the map will receive updates to the device's location as it changes.
-          trackUserLocation: true,
+        }).on('geolocate', async () => {
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              const { latitude, longitude } = position.coords
+            },
+            error => {
+              console.log(error)
+            },
+            {
+              timeout: 5000,
+              maximumAge: 0,
+            }
+          )
         })
       )
 
@@ -137,7 +125,6 @@ function MapboxMap({
         map.getCanvas().style.cursor = 'pointer'
 
         const coordinates = e.features[0].geometry.coordinates.slice()
-        const title = e.features[0].properties.title
         const street = e.features[0].properties.street
         const severity = e.features[0].properties.severity
         const kind = e.features[0].properties.kind
@@ -196,9 +183,9 @@ function MapboxMap({
 
         divElement.innerHTML = `
         <div>
-          <h3>Complaint Registration</h3>
-          <p>Latitude: ${e.lngLat.lat}</p>
-          <p>Longitude: ${e.lngLat.lng}</p>
+          <h3>Registre uma nova queixa</h3>
+          <p>Latitude: ${e.lngLat.lat.toPrecision(4)}</p>
+          <p>Longitude: ${e.lngLat.lng.toPrecision(4)}</p>
         </div>`
 
         divElement.appendChild(assignBtn)

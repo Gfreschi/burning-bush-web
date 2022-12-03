@@ -8,7 +8,7 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import { Incident, User } from 'src/types/DataTypes'
+import { Incident } from 'src/types/DataTypes'
 import { api } from 'src/services/api'
 import { usePrevious } from 'src/hooks/usePrevious'
 import { useSnackbar } from 'notistack'
@@ -81,29 +81,31 @@ function IncidentsProvider({
   }, [prevUserCoordinates, userCoordinates])
 
   // passar localicação do usuário para o contexto buscas incidentes na area do usuario
-  const getIncidents = useCallback(async (userCoordinates: UserCoordinates) => {
-    try {
-      const { data } = await api.get('/api/v1/web/near_by', {
-        params: {
-          latitude: userCoordinates?.latitude,
-          longitude: userCoordinates?.longitude,
-        },
-      })
+  const getIncidents = useCallback(
+    async (userCoordinates: UserCoordinates) => {
+      try {
+        const { data } = await api.get('/api/v1/web/near_by', {
+          params: {
+            latitude: userCoordinates?.latitude,
+            longitude: userCoordinates?.longitude,
+          },
+        })
 
-      if (data) {
-        setIncidentCollection(data)
+        if (data) {
+          setIncidentCollection(data)
+        }
+      } catch (error) {
+        errorAlert()
       }
-    } catch (error) {
-      errorAlert()
-    }
-  }, [])
+    },
+    [userCoordinates]
+  )
 
   useEffect(() => {
     if (shouldSendRequest) {
-      console.log('shouldSendRequest', shouldSendRequest)
       getIncidents(userCoordinates)
     }
-  }, [shouldSendRequest])
+  }, [shouldSendRequest, userCoordinates])
 
   // memoize the full context value
   const contextValue = useMemo(
@@ -116,7 +118,7 @@ function IncidentsProvider({
 
   return (
     // the Provider gives access to the context to its children
-    <IncidentsContext.Provider value={contextValue}>
+    <IncidentsContext.Provider value={{ ...contextValue }}>
       {children}
     </IncidentsContext.Provider>
   )
