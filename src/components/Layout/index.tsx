@@ -4,10 +4,11 @@ import Head from 'next/head'
 import TopBar from './TopBar'
 import NavBar from './NavBar'
 import { useAuthContext } from 'src/contexts/AuthContext'
+import { CssBaseline } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: theme.palette.background.dark,
+    backgroundColor: '#fefefe',
     display: 'flex',
     height: '100vh',
     overflow: 'hidden',
@@ -40,6 +41,7 @@ function Layout({ children, title }) {
 
   return (
     <div>
+      <CssBaseline />
       <Head>
         <title>{title}</title>
       </Head>

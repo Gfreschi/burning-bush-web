@@ -69,10 +69,7 @@ export default function SignInForm() {
             sm={4}
             md={7}
             sx={{
-              backgroundColor: t =>
-                t.palette.mode === 'light'
-                  ? t.palette.grey[50]
-                  : t.palette.grey[900],
+              backgroundColor: 'primary.main',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}

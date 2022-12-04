@@ -51,14 +51,14 @@ const useStyles = makeStyles(theme => ({
 const primaryMenu = [
   {
     id: 1,
-    label: 'Visita ao mapa local',
+    label: 'Mapa',
     path: '/maps/preview',
     icon: MapIcon,
   },
   {
     id: 2,
     label: 'Queixas',
-    path: '/complaints/new',
+    path: '/complaints',
     icon: AddLocationAltIcon,
   },
   // {

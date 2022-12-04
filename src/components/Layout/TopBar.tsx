@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     boxShadow: 'none',
     zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: '#fefefe',
   },
   toolbar: {
     minHeight: 56,
@@ -56,16 +56,21 @@ function TopBar({ user }: { user: User }) {
   return (
     <AppBar className={classes.root} color="default">
       <Toolbar className={classes.toolbar}>
-        <Box display="flex" alignItems="center">
-          <MenuIcon />
-          <Button onClick={() => router.push('/')}>
-            <LocalFireDepartmentIcon className={classes.logo} />
-          </Button>
+        <Box
+          display="flex"
+          alignItems="center"
+          onClick={() => router.push('/')}
+        >
+          <LocalFireDepartmentIcon className={classes.logo} />
         </Box>
 
         <Box display="flex" alignItems="center">
           <Hidden smDown>
-            <Typography variant="h4" color="textPrimary">
+            <Typography
+              variant="h4"
+              color="textPrimary"
+              onClick={() => router.push('/')}
+            >
               Burning Bush
             </Typography>
           </Hidden>
@@ -73,10 +78,6 @@ function TopBar({ user }: { user: User }) {
 
         {user ? (
           <Box display="flex" alignItems="center">
-            {/* <Typography variant="h6" color="textPrimary">
-              {user.name}
-            </Typography> */}
-
             <Avatar
               alt={user.email}
               src={user.avatar?.url}

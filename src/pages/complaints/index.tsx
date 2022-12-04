@@ -3,7 +3,7 @@ import Layout from 'src/components/Layout'
 import { Complaint } from 'src/types/DataTypes'
 import ErrorPage from 'next/error'
 import { parseCookies } from 'nookies'
-import { Box, Grid } from '@mui/material'
+import { Box, CssBaseline, Grid } from '@mui/material'
 import ComplaintCard from 'src/components/Complaints/ComplaintCard'
 import { getAPIClient } from 'src/services/axios'
 
@@ -18,6 +18,7 @@ export default function Index({ complaints }: ComplaintsProps) {
 
   return (
     <>
+      <CssBaseline />
       <Layout title="Home">
         <Box p={2}>
           {complaints.map(complaint => (

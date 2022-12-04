@@ -143,7 +143,7 @@ export function AuthProvider({ children }) {
 
         api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`
         sucessSignUp()
-        Router.push('/')
+        Router.push('/maps/preview')
       }
     } catch (error) {
       errorSignUp()
@@ -176,7 +176,7 @@ export function AuthProvider({ children }) {
 
         api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`
         sucessSignIn()
-        Router.push('/')
+        Router.push('/maps/preview')
       }
     } catch (error) {
       errorSignIn()
