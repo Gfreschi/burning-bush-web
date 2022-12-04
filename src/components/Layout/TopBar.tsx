@@ -13,12 +13,14 @@ import Hidden from '@mui/material/Hidden'
 import Badge from '@material-ui/core/Badge'
 import { useRouter } from 'next/router'
 import { Typography } from '@material-ui/core'
+import { User } from 'src/types/DataTypes'
+import { Avatar } from '@mui/material'
 
 const useStyles = makeStyles(theme => ({
   root: {
     boxShadow: 'none',
     zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: '#fefefe',
   },
   toolbar: {
     minHeight: 56,
@@ -47,50 +49,54 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-function TopBar() {
+function TopBar({ user }: { user: User }) {
   const classes = useStyles()
-
   const router = useRouter()
 
   return (
     <AppBar className={classes.root} color="default">
       <Toolbar className={classes.toolbar}>
-        <Box display="flex" alignItems="center">
-          <MenuIcon />
+        <Box
+          display="flex"
+          alignItems="center"
+          onClick={() => router.push('/')}
+        >
           <LocalFireDepartmentIcon className={classes.logo} />
-          <a href="/" />
         </Box>
 
         <Box display="flex" alignItems="center">
           <Hidden smDown>
-            <Typography variant="h4" color="textPrimary">
+            <Typography
+              variant="h4"
+              color="textPrimary"
+              onClick={() => router.push('/')}
+            >
               Burning Bush
             </Typography>
           </Hidden>
         </Box>
 
-        <Box display="flex">
-          <IconButton
-            size="large"
-            aria-label="show new notifications"
-            color="inherit"
-            className={classes.icons}
-          >
-            <Badge badgeContent={1} color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-
-          <Button
-            color="secondary"
-            component="a"
-            variant="outlined"
-            startIcon={<AccountCircle />}
-            onClick={() => router.push('sessions/sign_in')}
-          >
-            Fazer Login
-          </Button>
-        </Box>
+        {user ? (
+          <Box display="flex" alignItems="center">
+            <Avatar
+              alt={user.email}
+              src={user.avatar?.url}
+              sx={{ width: 32, height: 32, marginLeft: 1 }}
+            />
+          </Box>
+        ) : (
+          <Box display="flex" alignItems="center">
+            <Button
+              color="secondary"
+              component="a"
+              variant="outlined"
+              startIcon={<AccountCircle />}
+              onClick={() => router.push('/sessions/sign_in')}
+            >
+              Login
+            </Button>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   )

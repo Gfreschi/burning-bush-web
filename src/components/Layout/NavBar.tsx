@@ -21,6 +21,7 @@ import InfoIcon from '@mui/icons-material/Info'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
+import { User } from 'src/types/DataTypes'
 
 const useStyles = makeStyles(theme => ({
   mobileDrawer: {
@@ -50,31 +51,36 @@ const useStyles = makeStyles(theme => ({
 const primaryMenu = [
   {
     id: 1,
-    label: 'Visita ao mapa local',
+    label: 'Mapa',
     path: '/maps/preview',
     icon: MapIcon,
   },
   {
     id: 2,
-    label: 'Queixa',
-    path: '/complaints/new',
+    label: 'Queixas',
+    path: '/complaints',
     icon: AddLocationAltIcon,
   },
-  {
-    id: 3,
-    label: 'Listar Incidentes',
-    path: '/incidents',
-    icon: ListAltIcon,
-  },
+  // {
+  //   id: 3,
+  //   label: 'Listar Incidentes',
+  //   path: '/incidents',
+  //   icon: ListAltIcon,
+  // },
 ]
 
 const secondaryMenu = [
   { id: 1, label: 'Sobre', path: '/about', icon: InfoIcon },
   { id: 2, label: 'Apoie', path: '/help', icon: MonetizationOnIcon },
 ]
-function NavBar() {
+function NavBar({
+  isAuthenticated,
+  user,
+}: {
+  isAuthenticated: boolean
+  user: User
+}) {
   const classes = useStyles()
-
   const router = useRouter()
 
   const isSelected = (item: {
@@ -115,63 +121,72 @@ function NavBar() {
 
       <Divider />
 
-      <List>
-        {secondaryMenu.map(item => {
-          const Icon = item.icon
-          return (
-            <ListItem
-              key={item.id}
-              button
-              classes={{ root: classes.listItem }}
-              selected={isSelected(item)}
-              onClick={() => router.push(item.path)}
+      {!isAuthenticated && !user ? (
+        <>
+          <Box mx={4} my={2}>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="center"
+              style={{ padding: 8 }}
             >
-              <ListItemIcon>
-                <Icon style={{ color: isSelected(item) && '#f44336' }} />
-              </ListItemIcon>
-              <ListItemText
-                classes={{
-                  primary: classes.listItemText,
-                }}
-                primary={item.label}
-              />
-            </ListItem>
-          )
-        })}
-      </List>
+              Faça login para criar queixas e verificar incidentes
+            </Typography>
+            <Box mt={2}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                startIcon={<AccountCircle />}
+                onClick={() => router.push('/sessions/sign_in')}
+              >
+                Login
+              </Button>
+            </Box>
+          </Box>
+        </>
+      ) : (
+        <>
+          <Box mx={4} my={2}>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="center"
+              style={{ padding: 8 }}
+            >
+              Logado como {user?.email}
+            </Typography>
 
-      <Divider />
-
-      <Box mx={4} my={2}>
-        <Typography variant="body2">
-          Faça login para criar queixas e verificar incidentes
-        </Typography>
-        <Box mt={2}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            startIcon={<AccountCircle />}
-            onClick={() => router.push('sessions/sign_in')}
-          >
-            Fazer login
-          </Button>
-        </Box>
-      </Box>
+            <Box>
+              <Button
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                startIcon={<AccountCircle />}
+                onClick={() => router.push('/sessions/sign_out')}
+              >
+                Sair
+              </Button>
+            </Box>
+          </Box>
+        </>
+      )}
     </Box>
   )
-
   return (
     <div>
-      <Hidden mdDown>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.desktopDrawer }}
-          open
-          variant="persistent"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
+      <>
+        <Hidden mdDown>
+          <Drawer
+            anchor="left"
+            classes={{ paper: classes.desktopDrawer }}
+            open
+            variant="persistent"
+          >
+            {content}
+          </Drawer>
+        </Hidden>
+      </>
     </div>
   )
 }

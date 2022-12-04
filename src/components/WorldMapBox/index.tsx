@@ -3,6 +3,7 @@ import mapboxgl, { Marker } from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import NewComplaintForm from '../Complaints/NewComplaintForm'
 import { useAuthContext } from '../../contexts/AuthContext'
+import { useIncidentsContext } from 'src/contexts/IncidentsContext'
 import { useSnackbar } from 'notistack'
 import { Incident } from '../../types/DataTypes'
 import { pulsingDot } from 'src/components/WorldMapBox/incident-icon'
@@ -22,6 +23,7 @@ function MapboxMap({
   onRemoved,
 }: MapboxMapProps) {
   const { isAuthenticated } = useAuthContext()
+  // const { } = useIncidentsContext()
   const { enqueueSnackbar } = useSnackbar()
   const [map, setMap] = React.useState<mapboxgl.Map>()
   const [complaintCoordinates, setComplaintCoordinates] =
@@ -57,7 +59,6 @@ function MapboxMap({
     const map = mapboxMap
 
     map.on('load', () => {
-      // svg animation for incident icon
       map.addImage('pulsing-dot', pulsingDot, { pixelRatio: 2 })
 
       map.addSource('incidents', {
@@ -69,12 +70,13 @@ function MapboxMap({
             geometry: {
               type: 'Point',
               coordinates: [
-                incident.location.latitude,
                 incident.location.longitude,
+                incident.location.latitude,
               ],
             },
             properties: {
               title: incident.title,
+              street: incident.location.street,
               severity: incident.severity,
               kind: incident.kind,
               details: incident.details,
@@ -95,6 +97,27 @@ function MapboxMap({
 
       map.addControl(new mapboxgl.NavigationControl())
 
+      map.addControl(
+        new mapboxgl.GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+        }).on('geolocate', async () => {
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              const { latitude, longitude } = position.coords
+            },
+            error => {
+              console.log(error)
+            },
+            {
+              timeout: 5000,
+              maximumAge: 0,
+            }
+          )
+        })
+      )
+
       // when a hover event occurs on a feature in the places layer, open a popup at the
       // location of the feature, with description HTML from its properties.
       map.on('mouseenter', 'incidents', e => {
@@ -102,7 +125,7 @@ function MapboxMap({
         map.getCanvas().style.cursor = 'pointer'
 
         const coordinates = e.features[0].geometry.coordinates.slice()
-        const title = e.features[0].properties.title
+        const street = e.features[0].properties.street
         const severity = e.features[0].properties.severity
         const kind = e.features[0].properties.kind
         const details = e.features[0].properties.details
@@ -119,7 +142,7 @@ function MapboxMap({
         const incidentPopup = new mapboxgl.Popup()
           .setLngLat(coordinates)
           .setHTML(
-            `<h3>${title}</h3><p>Severity: ${severity}</p><p>Kind: ${kind}</p><p>Details: ${details}</p>`
+            `<h3>${street}</h3><p>Severity: ${severity}</p><p>Kind: ${kind}</p><p>Details: ${details}</p>`
           )
           .addTo(map)
 
@@ -160,9 +183,9 @@ function MapboxMap({
 
         divElement.innerHTML = `
         <div>
-          <h3>Complaint Registration</h3>
-          <p>Latitude: ${e.lngLat.lat}</p>
-          <p>Longitude: ${e.lngLat.lng}</p>
+          <h3>Registre uma nova queixa</h3>
+          <p>Latitude: ${e.lngLat.lat.toPrecision(4)}</p>
+          <p>Longitude: ${e.lngLat.lng.toPrecision(4)}</p>
         </div>`
 
         divElement.appendChild(assignBtn)

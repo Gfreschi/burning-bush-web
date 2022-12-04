@@ -13,7 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../../styles/theme'
-import { AuthContext } from '../../contexts/AuthContext'
+import { useAuthContext } from 'src/contexts/AuthContext'
 
 function Copyright(props: any) {
   return (
@@ -34,7 +34,7 @@ function Copyright(props: any) {
 }
 
 export default function SignInForm() {
-  const { signIn } = React.useContext(AuthContext)
+  const { signIn } = useAuthContext()
 
   const [isLoading, setIsLoading] = React.useState(false)
   const [errors, setErrors] = React.useState([])
@@ -50,11 +50,7 @@ export default function SignInForm() {
 
     try {
       const response = await signIn(payload)
-      if (response?.status !== 200) {
-        alert(response.data.error)
-      }
     } catch (error) {
-      console.log(error)
     } finally {
       setIsLoading(false)
     }
@@ -73,10 +69,7 @@ export default function SignInForm() {
             sm={4}
             md={7}
             sx={{
-              backgroundColor: t =>
-                t.palette.mode === 'light'
-                  ? t.palette.grey[50]
-                  : t.palette.grey[900],
+              backgroundColor: 'primary.main',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react'
 import cx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
@@ -70,33 +71,46 @@ export const ComplaintCard = React.memo(function ComplaintCard(
   const shadowStyles = useFadedShadowStyles()
   const gutterStyles = usePushingGutterStyles({ firstExcluded: true })
 
-  const complaintSample = {
-    id: 1,
-    details: 'DETALHES DA COMPLAINT',
-    severity: 5,
-    kind: 'QUEIMADA',
-    latitude: 1,
-    longitude: 1,
-    image: 'https://picsum.photos/200/300',
-    createdAt: '2021-10-10T00:00:00.000Z',
+  const enumKind = {
+    1: 'Queimada',
+    2: 'Desmatamento',
+    3: 'Poluição',
+    4: 'Outros',
   }
 
-  const { id, details, severity, kind, image, createdAt } = props.complaint
+  const {
+    id,
+    details,
+    severity,
+    kind,
+    latitude,
+    longitude,
+    associated_incident,
+    image,
+    created_at,
+  } = props.complaint
 
   return (
     <Card id={`${id}_complaint`} elevation={0} className={styles.root}>
       <CardMedia
         classes={mediaStyles}
-        image={image?.url || 'https://picsum.photos/200/300'}
+        placeholder="blur"
+        image={image?.url || '/images/placeholder.png'}
       />
       <CardContent className={cx(shadowStyles.root, styles.content)}>
         <Box color={'grey.500'} display={'flex'} alignItems={'center'} mb={1}>
           <LocationOn className={styles.locationIcon} />
-          <span>LOCATION</span>
+          <span>{latitude?.toPrecision(4)}</span>
+          <span>, </span>
+          <span>{longitude?.toPrecision(4)}</span>
         </Box>
 
-        <h2 className={styles.title}>FOGO NA PISTA</h2>
-        <h3 className={styles.subtitle}>{kind}</h3>
+        <h2 className={styles.title}>{'Queixa'}</h2>
+        {associated_incident ? (
+          <h3 className={styles.subtitle}>{'Associado a um incidente'}</h3>
+        ) : (
+          <h3 className={styles.subtitle}>{'Sem incidente associado'}</h3>
+        )}
 
         <Box
           display={'flex'}
@@ -119,7 +133,11 @@ export const ComplaintCard = React.memo(function ComplaintCard(
         </Box>
 
         <Typography color={'textSecondary'} variant={'body2'}>
-          {details}
+          Tipo: {enumKind[kind]}
+        </Typography>
+
+        <Typography color={'textSecondary'} variant={'body2'}>
+          Detalhes: {details || '-'}
         </Typography>
 
         <Box
@@ -140,12 +158,12 @@ export const ComplaintCard = React.memo(function ComplaintCard(
               color={'textSecondary'}
               className={styles.dateTime}
             >
-              {createdAt}
+              Criado em: {created_at.split('T')[0]}
             </Typography>
           </Box>
-          <IconButton className={styles.favorite} size={'small'}>
+          {/* <IconButton className={styles.favorite} size={'small'}>
             <MoreHoriz />
-          </IconButton>
+          </IconButton> */}
         </Box>
       </CardContent>
     </Card>

@@ -10,6 +10,7 @@ import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import Router from 'next/router'
 import { User } from 'src/types/DataTypes'
 import { api } from '../services/api'
+import { useSnackbar } from 'notistack'
 
 type SignInData = {
   email: string
@@ -45,8 +46,51 @@ export const useAuthContext = () => {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState<User | null>(null)
   const isAuthenticated = !!user
+  const { enqueueSnackbar } = useSnackbar()
 
   const { bnb_access_token: accessToken } = parseCookies()
+
+  const errorSignUp = () => {
+    enqueueSnackbar('Erro ao criar conta', {
+      variant: 'error',
+    })
+  }
+
+  const sucessSignUp = () => {
+    enqueueSnackbar('Conta criada com sucesso', {
+      variant: 'success',
+    })
+  }
+
+  const errorSignIn = () => {
+    enqueueSnackbar('Erro ao fazer login', {
+      variant: 'error',
+    })
+  }
+
+  const sucessSignIn = () => {
+    enqueueSnackbar('Login realizado com sucesso', {
+      variant: 'success',
+    })
+  }
+
+  const errorSignOut = () => {
+    enqueueSnackbar('Erro ao fazer logout', {
+      variant: 'error',
+    })
+  }
+
+  const sucessSignOut = () => {
+    enqueueSnackbar('Logout realizado com sucesso', {
+      variant: 'success',
+    })
+  }
+
+  const otherError = () => {
+    enqueueSnackbar('Erro desconhecido', {
+      variant: 'error',
+    })
+  }
 
   useEffect(() => {
     // if there is a token, fetch the user
@@ -67,7 +111,7 @@ export function AuthProvider({ children }) {
         })
         setUser(response.data)
       } catch (error) {
-        alert(error.message)
+        otherError()
       }
     },
     [accessToken]
@@ -83,7 +127,7 @@ export function AuthProvider({ children }) {
         JSON.stringify({
           email: email,
           password: password,
-          client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
+          client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
         }),
         {
           headers: {
@@ -98,11 +142,11 @@ export function AuthProvider({ children }) {
         })
 
         api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`
-
-        Router.push('/')
+        sucessSignUp()
+        Router.push('/maps/preview')
       }
     } catch (error) {
-      alert(error.message)
+      errorSignUp()
     }
   }
 
@@ -115,8 +159,8 @@ export function AuthProvider({ children }) {
           email: email,
           password: password,
           grant_type: 'password',
-          client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
-          client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
+          client_secret: 'BCb-ygdynnqzU1uOF5z38ivz-hfQYvpDxXmgdRH4H5Q',
+          client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
         }),
         {
           headers: {
@@ -131,11 +175,11 @@ export function AuthProvider({ children }) {
         })
 
         api.defaults.headers.Authorization = `Bearer ${response.data.access_token}`
-        alert('Login realizado com sucesso!')
-        Router.push('/')
+        sucessSignIn()
+        Router.push('/maps/preview')
       }
     } catch (error) {
-      alert(error.message)
+      errorSignIn()
     }
   }
 
@@ -144,22 +188,20 @@ export function AuthProvider({ children }) {
     try {
       const { bnb_access_token: accessToken } = parseCookies()
 
-      await api
-        .post('/api/v1/oauth/revoke', {
-          token: accessToken,
-          client_secret: 't4yDDok6dgV9xRclKt-C3E5XXDV-hYHufvZfRFS0Tys',
-          client_id: 'dqKz9O9OYVvshH7M4nsm_xV5szgQQDVNQWV8-WkCVTE',
-        })
-        .then(() => {
-          destroyCookie(undefined, 'bnb_access_token')
-          setUser(null)
-          Router.push('/')
-        })
-        .catch(error => {
-          alert(error.message)
-        })
+      const response = await api.post('/api/v1/oauth/revoke', {
+        token: accessToken,
+        client_secret: 'BCb-ygdynnqzU1uOF5z38ivz-hfQYvpDxXmgdRH4H5Q',
+        client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
+      })
+
+      if (response?.status === 200) {
+        destroyCookie(undefined, 'bnb_access_token')
+        setUser(null)
+        // sucessSignOut()
+        Router.push('/')
+      }
     } catch (error) {
-      alert(error.message)
+      errorSignOut()
     }
   }
 

@@ -110,16 +110,15 @@ export default function NewComplaintForm(
   // function to call api
   async function createComplaint(complaintResquestData) {
     try {
-      await api.post('/api/v1/complaints', complaintResquestData).then(res => {
-        res.data.json()
+      await api.post('/api/v1/complaints', complaintResquestData).then(() => {
         reset()
         setShow(false)
-        enqueueSnackbar('Complaint created successfully', {
+        enqueueSnackbar('Queixa criada com sucesso!', {
           variant: 'success',
         })
       })
     } catch (error) {
-      enqueueSnackbar('Error creating complaint', {
+      enqueueSnackbar('Erro ao criar queixa!', {
         variant: 'error',
       })
     }
@@ -135,17 +134,21 @@ export default function NewComplaintForm(
 
     // Form data to send to the api
     complaintResquestData.append('complaint[details]', details)
-    complaintResquestData.append('complaint[kind]', Number(kind.toString()))
+    complaintResquestData.append('complaint[kind]', kind.toString())
     complaintResquestData.append('complaint[severity]', severity.toString())
     complaintResquestData.append('complaint[longitude]', longitude.toString())
     complaintResquestData.append('complaint[latitude]', latitude.toString())
-    complaintResquestData.append('complaint[image]', image[0])
+
+    // Append image to the form data if present
+    if (image) {
+      complaintResquestData.append('complaint[image]', image[0])
+    }
 
     console.log(complaintResquestData)
     createComplaint(complaintResquestData)
   }
 
-  return true ? (
+  return show ? (
     <>
       <ThemeProvider theme={theme}>
         <Container
@@ -254,10 +257,10 @@ export default function NewComplaintForm(
                               required
                               error={!!formState.errors.kind}
                             >
-                              <MenuItem value={0}>Queimada</MenuItem>
-                              <MenuItem value={1}>Lixo</MenuItem>
-                              <MenuItem value={2}>Alagamento</MenuItem>
-                              <MenuItem value={3}>Outro</MenuItem>
+                              <MenuItem value={'0'}>Queimada</MenuItem>
+                              <MenuItem value={'1'}>Desmatamento</MenuItem>
+                              <MenuItem value={'2'}>Poluição</MenuItem>
+                              <MenuItem value={'3'}>Outros</MenuItem>
                             </Select>
                           </FormControl>
                         </>

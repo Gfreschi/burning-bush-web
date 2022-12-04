@@ -25,9 +25,8 @@ export default function MyApp(props: MyAppProps) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-
-      <AuthProvider>
-        <SnackbarProvider maxSnack={3}>
+      <SnackbarProvider maxSnack={3}>
+        <AuthProvider>
           <ThemeProvider theme={theme}>
             <React.StrictMode>
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
@@ -37,8 +36,8 @@ export default function MyApp(props: MyAppProps) {
               </IncidentsProvider>
             </React.StrictMode>
           </ThemeProvider>
-        </SnackbarProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </SnackbarProvider>
     </CacheProvider>
   )
 }

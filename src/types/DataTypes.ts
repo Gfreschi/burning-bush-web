@@ -1,32 +1,40 @@
+/* eslint-disable camelcase */
+export interface Avatar {
+  byte_size: number
+  url: string
+  name: string
+}
+
 export interface User {
   readonly id?: number
   name: string
   email: string
   password: string
-  avatarUrl?: string
+  avatar?: Avatar
   readonly role: string
-  readonly createdAt: string
-  readonly updatedAt: string
+  readonly created_at: string
+  readonly updated_at: string
 }
 
 export interface Image {
-  byteSize: number
+  byte_size: number
   url: string
   name: string
 }
 
 export interface Complaint {
   readonly id?: number
-  readonly userId?: number
+  readonly user_id?: number
   severity: number
   details?: string
   kind: number
-  incidentId?: number
+  incident_id?: number
   latitude: number
   longitude: number
   image?: Image
-  readonly createdAt?: string
-  readonly updatedAt?: string
+  associated_incident?: boolean
+  readonly created_at?: string
+  readonly updated_at?: string
 }
 
 export interface Location {
@@ -38,8 +46,8 @@ export interface Location {
   street?: string
   longitude: number
   latitude: number
-  readonly createdAt?: string
-  readonly updatedAt?: string
+  readonly created_at?: string
+  readonly updated_at?: string
 }
 
 export interface Incident {
@@ -49,6 +57,6 @@ export interface Incident {
   readonly kind: number
   readonly details: string
   readonly location: Location
-  readonly createdAt?: string
-  readonly updatedAt?: string
+  readonly created_at?: string
+  readonly updated_at?: string
 }
