@@ -136,6 +136,7 @@ function NavBar({
               <Button
                 variant="outlined"
                 color="secondary"
+                fullWidth
                 startIcon={<AccountCircle />}
                 onClick={() => router.push('/sessions/sign_in')}
               >
@@ -146,24 +147,27 @@ function NavBar({
         </>
       ) : (
         <>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            align="center"
-            style={{ padding: 8 }}
-          >
-            Logado como {user?.email}
-          </Typography>
-
-          <Box>
-            <Button
-              variant="outlined"
-              color="secondary"
-              startIcon={<AccountCircle />}
-              onClick={() => router.push('/sessions/sign_out')}
+          <Box mx={4} my={2}>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="center"
+              style={{ padding: 8 }}
             >
-              Sair
-            </Button>
+              Logado como {user?.email}
+            </Typography>
+
+            <Box>
+              <Button
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                startIcon={<AccountCircle />}
+                onClick={() => router.push('/sessions/sign_out')}
+              >
+                Sair
+              </Button>
+            </Box>
           </Box>
         </>
       )}

@@ -43,7 +43,7 @@ const useIncidentsContext = () => {
 function IncidentsProvider({
   children,
   initialOptions = {
-    userCoordinates: { latitude: -22.41, longitude: -47.57 },
+    userCoordinates: { latitude: -22.38, longitude: -47.37 },
   },
 }: IncidentsContextType) {
   const [incidentCollection, setIncidentCollection] = useState<Incident[]>([])
@@ -63,6 +63,10 @@ function IncidentsProvider({
     enqueueSnackbar('Erro ao carregar os incidentes', {
       variant: 'error',
     })
+  }
+
+  const initialUserCoordinates = (coordinates: UserCoordinates) => {
+    setUserCoordinates(coordinates)
   }
 
   const shouldSendRequest = useMemo(() => {
@@ -118,7 +122,9 @@ function IncidentsProvider({
 
   return (
     // the Provider gives access to the context to its children
-    <IncidentsContext.Provider value={{ ...contextValue }}>
+    <IncidentsContext.Provider
+      value={{ ...contextValue, initialUserCoordinates }}
+    >
       {children}
     </IncidentsContext.Provider>
   )

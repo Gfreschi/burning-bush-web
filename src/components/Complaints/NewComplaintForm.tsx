@@ -138,7 +138,11 @@ export default function NewComplaintForm(
     complaintResquestData.append('complaint[severity]', severity.toString())
     complaintResquestData.append('complaint[longitude]', longitude.toString())
     complaintResquestData.append('complaint[latitude]', latitude.toString())
-    complaintResquestData.append('complaint[image]', image[0])
+
+    // Append image to the form data if present
+    if (image) {
+      complaintResquestData.append('complaint[image]', image[0])
+    }
 
     console.log(complaintResquestData)
     createComplaint(complaintResquestData)
@@ -254,9 +258,9 @@ export default function NewComplaintForm(
                               error={!!formState.errors.kind}
                             >
                               <MenuItem value={'0'}>Queimada</MenuItem>
-                              <MenuItem value={'1'}>Lixo</MenuItem>
-                              <MenuItem value={'2'}>Alagamento</MenuItem>
-                              <MenuItem value={'3'}>Outro</MenuItem>
+                              <MenuItem value={'1'}>Desmatamento</MenuItem>
+                              <MenuItem value={'2'}>Poluição</MenuItem>
+                              <MenuItem value={'3'}>Outros</MenuItem>
                             </Select>
                           </FormControl>
                         </>

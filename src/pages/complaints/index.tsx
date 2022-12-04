@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     }
   }
 
-  const res = await apiClient.get('/api/v1/complaints')
+  const res = await apiClient.get('/api/v1/web/complaints')
 
   const complaints: Complaint[] = res.data
 

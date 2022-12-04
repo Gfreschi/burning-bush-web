@@ -58,8 +58,9 @@ function TopBar({ user }: { user: User }) {
       <Toolbar className={classes.toolbar}>
         <Box display="flex" alignItems="center">
           <MenuIcon />
-          <LocalFireDepartmentIcon className={classes.logo} />
-          <a href="/" />
+          <Button onClick={() => router.push('/')}>
+            <LocalFireDepartmentIcon className={classes.logo} />
+          </Button>
         </Box>
 
         <Box display="flex" alignItems="center">
@@ -78,7 +79,7 @@ function TopBar({ user }: { user: User }) {
 
             <Avatar
               alt={user.email}
-              src={user.avatar}
+              src={user.avatar?.url}
               sx={{ width: 32, height: 32, marginLeft: 1 }}
             />
           </Box>
