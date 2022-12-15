@@ -127,7 +127,7 @@ export function AuthProvider({ children }) {
         JSON.stringify({
           email: email,
           password: password,
-          client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
+          client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
         }),
         {
           headers: {
@@ -159,8 +159,8 @@ export function AuthProvider({ children }) {
           email: email,
           password: password,
           grant_type: 'password',
-          client_secret: 'BCb-ygdynnqzU1uOF5z38ivz-hfQYvpDxXmgdRH4H5Q',
-          client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
+          client_secret: '1o157h9voaOdEnWVq1jzjl0Bzvqis8xOHzGIImm_pdc',
+          client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
         }),
         {
           headers: {
@@ -190,8 +190,8 @@ export function AuthProvider({ children }) {
 
       const response = await api.post('/api/v1/oauth/revoke', {
         token: accessToken,
-        client_secret: 'BCb-ygdynnqzU1uOF5z38ivz-hfQYvpDxXmgdRH4H5Q',
-        client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
+        client_secret: '1o157h9voaOdEnWVq1jzjl0Bzvqis8xOHzGIImm_pdc',
+        client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
       })
 
       if (response?.status === 200) {

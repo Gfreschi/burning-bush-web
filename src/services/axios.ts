@@ -9,12 +9,12 @@ export function getAPIClient(ctx?: unknown) {
     baseURL: 'http://localhost:3000',
   })
 
-  // ver infos enviadas
-  api.interceptors.request.use(config => {
-    console.log(config)
+  // // ver infos enviadas
+  // api.interceptors.request.use(config => {
+  //   console.log(config)
 
-    return config
-  })
+  //   return config
+  // })
 
   if (token) {
     api.defaults.headers.common.Authorization = `Bearer ${token}`

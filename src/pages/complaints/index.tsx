@@ -49,7 +49,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   const apiClient = getAPIClient(ctx)
 
   // fetch token from cookies
-  const { bnb_access_token: token } = parseCookies(ctx)
+  const { 'bnb_access_token': token } = parseCookies(ctx)
 
   // authentication server side
   // if token is not present, redirect to login page

@@ -28,7 +28,7 @@ export async function signUpRequest(data: SignUpRequestData) {
   const response = await api.post('/api/v1/users', {
     email: data.email,
     password: data.password,
-    client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
+    client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
   })
 
   return {
@@ -55,8 +55,8 @@ export async function signInRequest(data: SignInRequestData) {
         email: data.email,
         password: data.password,
         grant_type: 'password',
-        client_secret: 'BCb-ygdynnqzU1uOF5z38ivz-hfQYvpDxXmgdRH4H5Q',
-        client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
+        client_secret: '1o157h9voaOdEnWVq1jzjl0Bzvqis8xOHzGIImm_pdc',
+        client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
       }),
       {
         headers: {
@@ -75,8 +75,8 @@ export async function signInRequest(data: SignInRequestData) {
 export async function signOutRequest(data: SignOutRequestData) {
   const response = await api.post('/api/v1/oauth/revoke', {
     token: data,
-    client_secret: 'BCb-ygdynnqzU1uOF5z38ivz-hfQYvpDxXmgdRH4H5Q',
-    client_id: 'KrfT7OpXi2q5aUgcZwYVn2eLgA_viqCTU5DVnD-WDFk',
+    client_secret: '1o157h9voaOdEnWVq1jzjl0Bzvqis8xOHzGIImm_pdc',
+    client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
   })
 
   return { response }

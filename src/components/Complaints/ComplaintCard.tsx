@@ -16,6 +16,7 @@ import { useWideCardMediaStyles } from '@mui-treasury/styles/cardMedia/wide'
 import { useFadedShadowStyles } from '@mui-treasury/styles/shadow/faded'
 import { usePushingGutterStyles } from '@mui-treasury/styles/gutter/pushing'
 import { Complaint } from 'src/types/DataTypes'
+import { CssBaseline } from '@mui/material'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -91,82 +92,85 @@ export const ComplaintCard = React.memo(function ComplaintCard(
   } = props.complaint
 
   return (
-    <Card id={`${id}_complaint`} elevation={0} className={styles.root}>
-      <CardMedia
-        classes={mediaStyles}
-        placeholder="blur"
-        image={image?.url || '/images/placeholder.png'}
-      />
-      <CardContent className={cx(shadowStyles.root, styles.content)}>
-        <Box color={'grey.500'} display={'flex'} alignItems={'center'} mb={1}>
-          <LocationOn className={styles.locationIcon} />
-          <span>{latitude?.toPrecision(4)}</span>
-          <span>, </span>
-          <span>{longitude?.toPrecision(4)}</span>
-        </Box>
+    <>
+      <CssBaseline />
+      <Card id={`${id}_complaint`} elevation={0} className={styles.root}>
+        <CardMedia
+          classes={mediaStyles}
+          placeholder="blur"
+          image={image?.url || '/images/placeholder.png'}
+        />
+        <CardContent className={cx(shadowStyles.root, styles.content)}>
+          <Box color={'grey.500'} display={'flex'} alignItems={'center'} mb={1}>
+            <LocationOn className={styles.locationIcon} />
+            <span>{latitude?.toPrecision(4)}</span>
+            <span>, </span>
+            <span>{longitude?.toPrecision(4)}</span>
+          </Box>
 
-        <h2 className={styles.title}>{'Queixa'}</h2>
-        {associated_incident ? (
-          <h3 className={styles.subtitle}>{'Associado a um incidente'}</h3>
-        ) : (
-          <h3 className={styles.subtitle}>{'Sem incidente associado'}</h3>
-        )}
+          <h2 className={styles.title}>{'Queixa'}</h2>
+          {associated_incident ? (
+            <h3 className={styles.subtitle}>{'Associado a um incidente'}</h3>
+          ) : (
+            <h3 className={styles.subtitle}>{'Sem incidente associado'}</h3>
+          )}
 
-        <Box
-          display={'flex'}
-          alignItems={'center'}
-          mb={1}
-          className={gutterStyles.parent}
-        >
-          <Typography variant={'body2'} className={styles.rateValue}>
-            Severidade:
-          </Typography>
-          <Rating
-            name={'rating'}
-            precision={1}
-            value={severity}
-            size={'small'}
-            icon={<LocalFireDepartmentIcon fontSize="inherit" />}
-            emptyIcon={<LocalFireDepartmentIcon fontSize="inherit" />}
-            readOnly
-          />
-        </Box>
-
-        <Typography color={'textSecondary'} variant={'body2'}>
-          Tipo: {enumKind[kind]}
-        </Typography>
-
-        <Typography color={'textSecondary'} variant={'body2'}>
-          Detalhes: {details || '-'}
-        </Typography>
-
-        <Box
-          mt={2}
-          display={'flex'}
-          justifyContent={'space-between'}
-          alignItems={'center'}
-        >
           <Box
             display={'flex'}
             alignItems={'center'}
-            justifyContent={'space-between'}
+            mb={1}
             className={gutterStyles.parent}
           >
-            <Typography
-              component={'span'}
-              variant={'body2'}
-              color={'textSecondary'}
-              className={styles.dateTime}
-            >
-              Criado em: {created_at.split('T')[0]}
+            <Typography variant={'body2'} className={styles.rateValue}>
+              Severidade:
             </Typography>
+            <Rating
+              name={'rating'}
+              precision={1}
+              value={severity}
+              size={'small'}
+              icon={<LocalFireDepartmentIcon fontSize="inherit" />}
+              emptyIcon={<LocalFireDepartmentIcon fontSize="inherit" />}
+              readOnly
+            />
           </Box>
-          {/* <IconButton className={styles.favorite} size={'small'}>
+
+          <Typography color={'textSecondary'} variant={'body2'}>
+            Tipo: {enumKind[kind]}
+          </Typography>
+
+          <Typography color={'textSecondary'} variant={'body2'}>
+            Detalhes: {details || '-'}
+          </Typography>
+
+          <Box
+            mt={2}
+            display={'flex'}
+            justifyContent={'space-between'}
+            alignItems={'center'}
+          >
+            <Box
+              display={'flex'}
+              alignItems={'center'}
+              justifyContent={'space-between'}
+              className={gutterStyles.parent}
+            >
+              <Typography
+                component={'span'}
+                variant={'body2'}
+                color={'textSecondary'}
+                className={styles.dateTime}
+              >
+                Criado em: {created_at.split('T')[0]}
+              </Typography>
+            </Box>
+            {/* <IconButton className={styles.favorite} size={'small'}>
             <MoreHoriz />
           </IconButton> */}
-        </Box>
-      </CardContent>
-    </Card>
+          </Box>
+        </CardContent>
+      </Card>
+    </>
   )
 })
 
