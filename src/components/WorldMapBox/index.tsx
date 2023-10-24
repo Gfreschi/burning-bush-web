@@ -39,7 +39,7 @@ function MapboxMap({
     const mapboxMap = new mapboxgl.Map({
       container: node,
       accessToken:
-        'pk.eyJ1IjoiZ2ZyZXNjaGlpIiwiYSI6ImNsMmRoNm52ZTAwZ2MzaXJ3MGJqd3I2NjQifQ.Gn1njvZQCcHTUt4MxbaVyA',
+        'secret',
       style: 'mapbox://styles/mapbox/streets-v9',
       center: [-47.57, -22.41],
       zoom: 13,

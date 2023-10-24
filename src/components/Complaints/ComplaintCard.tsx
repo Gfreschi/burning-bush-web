@@ -164,9 +164,6 @@ export const ComplaintCard = React.memo(function ComplaintCard(
                 Criado em: {created_at.split('T')[0]}
               </Typography>
             </Box>
-            {/* <IconButton className={styles.favorite} size={'small'}>
-            <MoreHoriz />
-          </IconButton> */}
           </Box>
         </CardContent>
       </Card>

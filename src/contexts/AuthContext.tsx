@@ -93,7 +93,6 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    // if there is a token, fetch the user
     if (accessToken) {
       fetchUser(accessToken)
     }
@@ -117,9 +116,7 @@ export function AuthProvider({ children }) {
     [accessToken]
   )
 
-  // chamada ao backend onde faz a authenticacao de um novo usuario e retorna suas credencias
-  // hook para fazer o registro de um novo usuario
-  // critografar a senha do usuario
+  // auth context call
   async function signUp({ email, password }: SignUpData) {
     try {
       const response = await api.post(
@@ -127,7 +124,7 @@ export function AuthProvider({ children }) {
         JSON.stringify({
           email: email,
           password: password,
-          client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
+          client_id: 'secret',
         }),
         {
           headers: {
@@ -150,7 +147,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // chamada ao backend onde faz a authenticacao e retorna um usuario
+  // auth context call
   async function signIn({ email, password }: SignInData) {
     try {
       const response = await api.post(
@@ -159,8 +156,8 @@ export function AuthProvider({ children }) {
           email: email,
           password: password,
           grant_type: 'password',
-          client_secret: '1o157h9voaOdEnWVq1jzjl0Bzvqis8xOHzGIImm_pdc',
-          client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
+          client_secret: 'secret',
+          client_id: 'secret',
         }),
         {
           headers: {
@@ -183,21 +180,21 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // chamada ao backend para fazer o logout
+  // auth context call
   async function signOut() {
     try {
       const { bnb_access_token: accessToken } = parseCookies()
 
       const response = await api.post('/api/v1/oauth/revoke', {
         token: accessToken,
-        client_secret: '1o157h9voaOdEnWVq1jzjl0Bzvqis8xOHzGIImm_pdc',
-        client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
+        client_secret: 'secret',
+        client_id: 'secret',
       })
 
       if (response?.status === 200) {
         destroyCookie(undefined, 'bnb_access_token')
         setUser(null)
-        // sucessSignOut()
+        sucessSignOut()
         Router.push('/')
       }
     } catch (error) {

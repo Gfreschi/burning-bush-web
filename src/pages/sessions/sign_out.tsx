@@ -5,6 +5,5 @@ export default function SignOut() {
   try {
     signOut()
   } catch (error) {
-    console.log(error)
   }
 }

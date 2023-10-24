@@ -18,7 +18,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import SendIcon from '@mui/icons-material/Send'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../../styles/theme'
-// importation for the useForm hook
+
 import {
   useForm,
   SubmitHandler,
@@ -59,23 +59,23 @@ const validationSchema = Yup.object().shape({
   details: Yup.string(),
   kind: Yup.string().required('Kind is required'),
   severity: Yup.number().required('Severity is required'),
-  // files: Yup.array()
-  //   .of(
-  //     Yup.mixed()
-  //       .test(
-  //         'fileSize',
-  //         'Arquivo muito grande',
-  //         value => value && value.size <= 2000000
-  //       )
-  //       .test(
-  //         'fileFormat',
-  //         'Formato de arquivo inválido',
-  //         value =>
-  //           value &&
-  //           ['image/jpeg', 'image/jpg', 'image/png'].includes(value.type)
-  //       )
-  //   )
-  //   .max(3, 'Only 3 pictures are allowed'),
+  files: Yup.array()
+    .of(
+      Yup.mixed()
+        .test(
+          'fileSize',
+          'Arquivo muito grande',
+          value => value && value.size <= 2000000
+        )
+        .test(
+          'fileFormat',
+          'Formato de arquivo inválido',
+          value =>
+            value &&
+            ['image/jpeg', 'image/jpg', 'image/png'].includes(value.type)
+        )
+    )
+    .max(3, 'Only 3 pictures are allowed'),
 })
 
 const FileInput = ({ control, name }) => {

@@ -69,12 +69,6 @@ function Index({ item }) {
             <Typography display="block" variant="body2" color="textSecondary">
               {item.createdAt}
             </Typography>
-
-            {/* <Box mt="1">
-              <Typography variant="body2" color="textSecondary">
-                {item.location}
-              </Typography>
-            </Box> */}
           </Box>
         </Box>
       </Box>

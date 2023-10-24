@@ -30,15 +30,6 @@ interface FileInputProps {
   error: string
 }
 
-{/* <FileInput
-accept="image/png, image/jpg, image/jpeg, image/pdf"
-control={control}
-multiple
-name="pictures"
-mode="append"
-/> */}
-
-
 // TODO: REFACTOR THIS COMPONENT AND USE IN THE CREATE COMPLAINT FORM
 export default function FileInput(props: FileInputProps) {
   const { name, label = name, mode = 'update' } = props

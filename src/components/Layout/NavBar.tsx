@@ -61,12 +61,6 @@ const primaryMenu = [
     path: '/complaints',
     icon: AddLocationAltIcon,
   },
-  // {
-  //   id: 3,
-  //   label: 'Listar Incidentes',
-  //   path: '/incidents',
-  //   icon: ListAltIcon,
-  // },
 ]
 
 const secondaryMenu = [

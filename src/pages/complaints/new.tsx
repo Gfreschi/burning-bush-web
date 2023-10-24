@@ -18,8 +18,7 @@ export default function New() {
   const [data, setData] = React.useState<Complaint>(null)
   const [profile, setProfile] = React.useState(null)
 
-  const clientId =
-    '218627128744-rk3bivfqtrpnnf1fkl8c96llvid42d7h.apps.googleusercontent.com'
+  const clientId = 'secret'
 
   const complaintSample = {
     id: 1,
@@ -31,16 +30,6 @@ export default function New() {
     image: 'https://picsum.photos/200/300',
     createdAt: '2021-10-10T00:00:00.000Z',
   }
-
-  // React.useEffect(() => {
-  //   const initClient = async () => {
-  //     await gapi.client.init({
-  //       clientId: clientId,
-  //       scope: '',
-  //     })
-  //   }
-  //   // gapi.load('client:auth2', initClient)
-  // }, [])
 
   const onSuccess = res => {
     setProfile(res.profileObj)

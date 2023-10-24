@@ -37,7 +37,6 @@ const pages = [
   },
 ]
 
-// const pages = ['Mapa', 'Queixas', 'Incidentes', 'Sobre']
 const settings = ['Perfil', 'Sair']
 
 const ResponsiveAppBar = () => {

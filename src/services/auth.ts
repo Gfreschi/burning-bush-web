@@ -28,7 +28,7 @@ export async function signUpRequest(data: SignUpRequestData) {
   const response = await api.post('/api/v1/users', {
     email: data.email,
     password: data.password,
-    client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
+    client_id: 'secret',
   })
 
   return {
@@ -47,7 +47,6 @@ export async function signUpRequest(data: SignUpRequestData) {
 }
 
 export async function signInRequest(data: SignInRequestData) {
-  // pesquisar payload
   try {
     const response = await api.post(
       '/api/v1/oauth/token',
@@ -55,8 +54,8 @@ export async function signInRequest(data: SignInRequestData) {
         email: data.email,
         password: data.password,
         grant_type: 'password',
-        client_secret: '1o157h9voaOdEnWVq1jzjl0Bzvqis8xOHzGIImm_pdc',
-        client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
+        client_secret: 'secret',
+        client_id: 'secret',
       }),
       {
         headers: {
@@ -64,10 +63,8 @@ export async function signInRequest(data: SignInRequestData) {
         },
       }
     )
-    // console.log(response)
     return response
   } catch (error) {
-    // console.log(error.response) // response error data
     return error.response
   }
 }
@@ -75,13 +72,14 @@ export async function signInRequest(data: SignInRequestData) {
 export async function signOutRequest(data: SignOutRequestData) {
   const response = await api.post('/api/v1/oauth/revoke', {
     token: data,
-    client_secret: '1o157h9voaOdEnWVq1jzjl0Bzvqis8xOHzGIImm_pdc',
-    client_id: 'G58TtDKICFzGfdZ3mpj2uoTzx5Aog8iO7dX9JTCzph0',
+    client_secret: 'secret',
+    client_id: 'secret',
   })
 
   return { response }
 }
-// recebe o token e retorna as infos do usuario da api
+
+// receive token and return user data
 export async function getCurrentUser(accessToken: string) {
   const config = {
     headers: {
@@ -92,14 +90,4 @@ export async function getCurrentUser(accessToken: string) {
   const user = await api.get('/api/v1/users/me', config)
 
   return { user }
-
-  // best way to get user info
-  // return api
-  //   .get('/v1/users/me', config)
-  //   .then((response: any) => {
-  //     return response.data
-  //   })
-  //   .catch((error: any) => {
-  //     return error.response.data
-  //   })
 }

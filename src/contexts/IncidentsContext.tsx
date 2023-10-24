@@ -84,7 +84,7 @@ function IncidentsProvider({
     return false
   }, [prevUserCoordinates, userCoordinates])
 
-  // passar localicação do usuário para o contexto buscas incidentes na area do usuario
+  // fetch incidents of user coordinates
   const getIncidents = useCallback(
     async (userCoordinates: UserCoordinates) => {
       try {

@@ -7,5 +7,3 @@ export default function UpdateProfile() {
     </div>
   )
 }
-
-// https://www.youtube.com/watch?v=u1kCtkVR7cE&ab_channel=Rocketseat

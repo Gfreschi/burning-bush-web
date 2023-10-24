@@ -1,4 +1,4 @@
 import { getAPIClient } from './axios'
 
-// utilizar apenas para chamadas vindas do browser
+// browser api call
 export const api = getAPIClient()
