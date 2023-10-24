@@ -1,4 +1,25 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Introduction
+
+The burning-bush-web was part of my graduation project. It is a web application that allows users to create complaints in a sustainability context. The application is built with React and Next.js. The backend is build with Ruby on Rails and can be found [here](https://github.com/Gfreschi/burning-bush-api). This was a initial project that I used to learn Typescript, React and Next.js. The application is not finished and is not deployed.
+
+## Key Features
+
+- MUI (Material UI) styling
+- React Context API
+- Form validation
+- Authentication and authorization contexts
+- Next SSR
+- Mapbox integration (React Map GL)
+- Form validations (Yup)
+
+## Demo
+
+https://github.com/Gfreschi/burning-bush-web/assets/63794779/abd42468-9542-4b82-8277-a128b2e30261
+
+## Basic Flow
+
+<img width="726" alt="image" src="https://github.com/Gfreschi/burning-bush-web/assets/63794779/a5ecfe21-64ca-4c1b-b572-830fe8e9255a">
+
 
 ## Getting Started
 
@@ -11,24 +32,3 @@ yarn dev
 ```
 
 Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
