@@ -18,7 +18,7 @@ https://github.com/Gfreschi/burning-bush-web/assets/63794779/abd42468-9542-4b82-
 
 ## Basic Flow
 
-<img width="726" alt="image" src="https://github.com/Gfreschi/burning-bush-web/assets/63794779/a5ecfe21-64ca-4c1b-b572-830fe8e9255a">
+<img alt="image" src="https://github.com/Gfreschi/burning-bush-web/assets/63794779/a5ecfe21-64ca-4c1b-b572-830fe8e9255a">
 
 
 ## Getting Started
@@ -32,3 +32,6 @@ yarn dev
 ```
 
 Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
+
+### License
+This project is licensed under the [MIT LICENSE]. For more details, please see the LICENSE file.
